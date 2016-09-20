@@ -1,0 +1,7 @@
+/coverage
+/dist
+/lib
+/npm-debug.log
+/node_modules
+.idea
+*.iml
