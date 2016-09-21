@@ -1,13 +1,13 @@
 export default function ($log) {
-  'ngInject';
+  "ngInject";
 
   return {
     terminal: true,
-    restrict: 'EA',
+    restrict: "EA",
 
     link: ($scope, $element, $attr, ctrl, transclude) => {
       if (!transclude) {
-        $log.error('orphan', 'Illegal use of ngTranscludeReplace directive in the template! No parent directive that requires a transclusion found.');
+        $log.error("orphan", "Illegal use of ngTranscludeReplace directive in the template! No parent directive that requires a transclusion found.");
         return;
       }
       transclude((clone) => {
