@@ -3,7 +3,7 @@
 import BusinessElementsClient from "business-elements";
 import BusinessElementsApi from "./business-elements-api";
 
-export class BusinessElementsApiProvider {
+export default class BusinessElementsApiProvider {
 
   constructor() {
     this.client = undefined;
