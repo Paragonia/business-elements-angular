@@ -12,7 +12,8 @@ export default function (businessElementsApi) {
     link: ($scope, $element, attrs) => {
       $scope.$watch("resourceSrc", function() {
         const qualifier = attrs.resourceQualifier;
-        const uri = businessElementsApi.getDownloadUri(attrs.resourceSrc, qualifier);
+        const isPublic = attrs.resourcePublic || false;
+        const uri = isPublic ? businessElementsApi.getPublicDownloadUri(attrs.resourceSrc, qualifier) : businessElementsApi.getDownloadUri(attrs.resourceSrc, qualifier);
         $element.attr("src", uri);
 
         $element.on("error", function() {
