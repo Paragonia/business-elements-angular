@@ -1,8 +1,6 @@
 "use strict";
 
-export default function (businessElementsApi) {
-  "ngInject";
-
+function resourceSrc(businessElementsApi) {
   return {
     restrict: "A",
     scope: {
@@ -25,3 +23,7 @@ export default function (businessElementsApi) {
     }
   };
 }
+
+resourceSrc.$inject = ["businessElementsApi"];
+export default resourceSrc;
+

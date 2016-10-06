@@ -1,6 +1,4 @@
-export default function (md5, api) {
-  "ngInject";
-
+function avatarSrc(md5, api) {
   return {
     restrict: "A",
     scope: {
@@ -64,3 +62,6 @@ export default function (md5, api) {
     }
   };
 }
+
+avatarSrc.$inject = ["md5", "api"];
+export default avatarSrc;

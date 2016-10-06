@@ -1,6 +1,6 @@
 {
   "name": "business-elements-angular",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Business Elements Angular module.",
   "main": "lib/index.js",
   "scripts": {

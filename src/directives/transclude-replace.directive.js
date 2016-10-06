@@ -1,6 +1,4 @@
-export default function ($log) {
-  "ngInject";
-
+function transcludeReplace($log) {
   return {
     terminal: true,
     restrict: "EA",
@@ -21,3 +19,6 @@ export default function ($log) {
     }
   };
 }
+
+transcludeReplace.$inject = ["$log"];
+export default transcludeReplace;

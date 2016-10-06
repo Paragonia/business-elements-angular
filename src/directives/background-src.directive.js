@@ -1,6 +1,4 @@
-export default function (md5, api) {
-  "ngInject";
-
+function backgroundSrc(md5, api) {
   return {
     restrict: "A",
     scope: {
@@ -49,3 +47,6 @@ export default function (md5, api) {
     }
   };
 }
+
+backgroundSrc.$inject = ["md5", "api"];
+export default backgroundSrc;
