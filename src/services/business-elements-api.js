@@ -30,4 +30,8 @@ export default class BusinessElementsApi {
   getDownloadUri(resourceUri, qualifier = null) {
     return this.tenant.getDownloadUri(resourceUri, qualifier);
   }
+
+  getPublicDownloadUri(resourceUri, qualifier = null) {
+    return this.tenant.getPublicDownloadUri(resourceUri, qualifier);
+  }
 }
