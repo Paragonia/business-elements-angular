@@ -11,13 +11,15 @@ function avatarSrc(md5, api) {
 
         const color = attrs["avatarColor"];
         const colorInput = attrs["avatarColorInput"];
+        const fontSize = attrs["avatarFontSize"] || "150%";
+        console.log("fontSize-link" + fontSize);
         const resourceUri = $scope.avatarResource;
 
-        const url = getUri(item, color, colorInput, resourceUri);
+        const url = getUri(item, color, colorInput, fontSize, resourceUri);
         $element.attr("src", url);
       });
 
-      function getUri(item, color, colorInputOption, resourceUri) {
+      function getUri(item, color, colorInputOption, fontSize, resourceUri) {
         if (resourceUri) {
           // if we have picture just return the uri for it, else build the svg.
           return api.getDownloadUri(resourceUri, "avatar");
@@ -43,15 +45,16 @@ function avatarSrc(md5, api) {
           color = "#" + md5(colorInput).substring(0, 6);
         }
 
+        console.log("fontSize-getUri" + fontSize);
         const data = `
           <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80">
             <circle cx="40" cy="40" r="40" fill="${color}"/>
-            <text x="40"
-                y="40"
+            <text x="50%"
+                y="50%"
                 text-anchor="middle"
-                alignment-baseline="middle"
+                alignment-baseline="central"
                 font-family="Roboto,Helvetica Neue,sans-serif"
-                font-size="150%"
+                font-size="${fontSize}"
                 fill="#ffffff">
                 ${text}
             </text>
