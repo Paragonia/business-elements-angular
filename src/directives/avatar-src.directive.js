@@ -12,7 +12,6 @@ function avatarSrc(md5, api) {
         const color = attrs["avatarColor"];
         const colorInput = attrs["avatarColorInput"];
         const fontSize = attrs["avatarFontSize"] || "150%";
-        console.log("fontSize-link" + fontSize);
         const resourceUri = $scope.avatarResource;
 
         const url = getUri(item, color, colorInput, fontSize, resourceUri);
@@ -45,7 +44,6 @@ function avatarSrc(md5, api) {
           color = "#" + md5(colorInput).substring(0, 6);
         }
 
-        console.log("fontSize-getUri" + fontSize);
         const data = `
           <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80">
             <circle cx="40" cy="40" r="40" fill="${color}"/>
