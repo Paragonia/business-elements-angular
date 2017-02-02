@@ -7,10 +7,10 @@ export default function (stringUtil) {
     link: function (scope, element, attrs, ctrl) {
       ctrl.$parsers.unshift(function (viewValue) {
         if (stringUtil.isEmailAddressValid(viewValue)) {
-          ctrl.$setValidity("validEmailAddress", true);
+          ctrl.$setValidity("validEmailaddress", true);
           return viewValue;
         } else {
-          ctrl.$setValidity("validEmailAddress", false);
+          ctrl.$setValidity("validEmailaddress", false);
           return undefined;
         }
       });
