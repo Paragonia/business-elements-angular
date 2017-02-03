@@ -1,5 +1,5 @@
 const validEmailRegExp = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$/;
-const validHandleRegExp = /[a-zA-Z-\d]{1,60}/;
+const validHandleRegExp = /^[a-zA-Z-0-9]{1,60}$/;
 const invalidHandleChars = /[^a-zA-Z-\d]/g;
 
 export default class StringUtil {
@@ -33,7 +33,7 @@ export default class StringUtil {
    * @returns {*|boolean} true, when email is valid.
    */
   isEmailAddressValid(email) {
-    return email && validEmailRegExp.test(email);
+    return (typeof email !== undefined) && validEmailRegExp.test(email);
   }
 
   /**
@@ -42,7 +42,7 @@ export default class StringUtil {
    * @returns {*|boolean} true, when handle is valid.
    */
   isHandleValid(handle) {
-    return handle && validHandleRegExp.test(handle);
+    return (typeof handle !== undefined) && validHandleRegExp.test(handle);
 
   }
 
