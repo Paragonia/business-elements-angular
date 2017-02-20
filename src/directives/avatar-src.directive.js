@@ -45,7 +45,7 @@ function avatarSrc(md5, api) {
           color = "#" + md5(colorInput).substring(0, 6);
         }
 
-        if (shape === 'rectangle') {
+        if (shape === "rectangle") {
           const data = `
           <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
             <rect width="80" height="80" fill="${color}"/>
