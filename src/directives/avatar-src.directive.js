@@ -11,14 +11,15 @@ function avatarSrc(md5, api) {
 
         const color = attrs["avatarColor"];
         const colorInput = attrs["avatarColorInput"];
+        const shape = attrs["avatarShape"];
         const fontSize = attrs["avatarFontSize"] || "150%";
         const resourceUri = $scope.avatarResource;
 
-        const url = getUri(item, color, colorInput, fontSize, resourceUri);
+        const url = getUri(item, color, shape, colorInput, fontSize, resourceUri);
         $element.attr("src", url);
       });
 
-      function getUri(item, color, colorInputOption, fontSize, resourceUri) {
+      function getUri(item, color, shape, colorInputOption, fontSize, resourceUri) {
         if (resourceUri) {
           // if we have picture just return the uri for it, else build the svg.
           return api.getDownloadUri(resourceUri, "avatar");
@@ -44,7 +45,24 @@ function avatarSrc(md5, api) {
           color = "#" + md5(colorInput).substring(0, 6);
         }
 
-        const data = `
+        if (shape === 'rectangle') {
+          const data = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+            <rect width="80" height="80" fill="${color}"/>
+            <text x="50%"
+                y="50%"
+                text-anchor="middle"
+                alignment-baseline="central"
+                font-family="Roboto,Helvetica Neue,sans-serif"
+                font-size="${fontSize}"
+                fill="#ffffff">
+                ${text}
+            </text>
+         </svg>
+        `;
+          return `data:image/svg+xml;utf8,${encodeURIComponent(data)}`;
+        } else {
+          const data = `
           <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80">
             <circle cx="40" cy="40" r="40" fill="${color}"/>
             <text x="50%"
@@ -58,7 +76,9 @@ function avatarSrc(md5, api) {
             </text>
          </svg>
         `;
-        return `data:image/svg+xml;utf8,${encodeURIComponent(data)}`;
+          return `data:image/svg+xml;utf8,${encodeURIComponent(data)}`;
+        }
+
       }
     }
   };
