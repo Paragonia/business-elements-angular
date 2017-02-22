@@ -13,7 +13,7 @@ function transcludeReplace($log) {
           $element.replaceWith(clone);
         }
         else {
-          $element.remove();
+          $element.append(clone);
         }
       });
     }
