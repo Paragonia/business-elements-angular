@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "business-elements": "^0.0.90",
-    "angular": "1.5.8"
+    "angular": "1.5.8",
+    "pdfjs-dist": "1.7.418"
   }
 }
