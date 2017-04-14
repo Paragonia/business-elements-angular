@@ -2,119 +2,37 @@
 
 export default class PdfViewerController {
 
-  constructor($scope, $element, $attrs, $log, $q, pdfService) {
+  constructor($scope, $element, $attrs, $document, $animate, $timeout, pdfService, $log, $q, $location) {
     'ngInject';
 
     this.$scope = $scope;
     this.$log = $log;
     this.$q = $q;
-
+    this.$element = $element;
+    this.$location = $location;
+    this.$document = $document[0];
+    this.$animate = $animate;
+    this.$timeout = $timeout;
     // Register the instance!
-
-    //const delegateService = new DelegateService();
     $scope.delegateHandle = $scope.$eval($attrs.delegateHandle);
-    let deregisterInstance = pdfService._registerInstance(this, $scope.delegateHandle);
+    var deregisterInstance = pdfService._registerInstance(this, $scope.delegateHandle);
     // De-Register on destory!
-    $scope.$on('$destroy', deregisterInstance);
+    $scope.$on('$destroy', () => {
+      deregisterInstance();
+    });
     $scope.pageCount = 0;
 
     this.url = $scope.$eval($attrs.url);
     this.headers = $scope.$eval($attrs.headers);
 
     this.currentPage = 1;
-    this.angle = 0;
     this.scale = $attrs.scale ? $attrs.scale : 1;
-    this.canvas = $element.find('canvas')[0];
-    this.ctx = this.canvas.getContext('2d');
 
-    if (this.url) {
-      this.load(this.url);
-    }
-  }
-
-  renderPage(num) {
-    if (!angular.isNumber(num)) {
-      num = parseInt(num);
-    }
-    if (!isFinite(num) || num <= 0 || num > this.$scope.pageCount || this.pdfDoc === null || angular.isUndefined(this.pdfDoc)) {
-      return;
-    }
-
-    this.pdfDoc
-      .getPage(num)
-      .then((page) => {
-        let viewport = page.getViewport(this.scale);
-        this.canvas.height = viewport.height;
-        this.canvas.width = viewport.width;
-
-        let renderContext = {
-          canvasContext: this.ctx,
-          viewport: viewport
-        };
-
-        page.render(renderContext);
-      });
-  }
-
-  transform() {
-    this.canvas.style.webkitTransform = 'rotate(' + this.angle + 'deg)';
-    this.canvas.style.MozTransform = 'rotate(' + this.angle + 'deg)';
-    this.canvas.style.msTransform = 'rotate(' + this.angle + 'deg)';
-    this.canvas.style.OTransform = 'rotate(' + this.angle + 'deg)';
-    this.canvas.style.transform = 'rotate(' + this.angle + 'deg)';
-  }
-
-  prev() {
-    if (this.currentPage <= 1) {
-      return;
-    }
-
-    this.currentPage = parseInt(this.currentPage, 10) - 1;
-    this.renderPage(this.currentPage);
-  }
-
-  next() {
-    if (this.currentPage >= this.pdfDoc.numPages) {
-      return;
-    }
-
-    this.currentPage = parseInt(this.currentPage, 10) + 1;
-    this.renderPage(this.currentPage);
-  }
-
-  zoomIn(amount) {
-    amount = amount || 0.2;
-    this.scale = parseFloat(this.scale) + amount;
-    this.renderPage(this.currentPage);
-    return this.scale;
-  }
-
-  zoomOut(amount) {
-    amount = amount || 0.2;
-    this.scale = parseFloat(this.scale) - amount;
-    this.scale = (this.scale > 0) ? this.scale : 0.1;
-    this.renderPage(this.currentPage);
-    return this.scale;
-  }
-
-  zoomTo(zoomToScale) {
-    zoomToScale = (zoomToScale) ? zoomToScale : 1.0;
-    this.scale = parseFloat(zoomToScale);
-    this.renderPage(this.currentPage);
-    return this.scale;
-  }
-
-  rotate() {
-    if (this.angle === 0) {
-      this.angle = 90;
-    } else if (this.angle === 90) {
-      this.angle = 180;
-    } else if (this.angle === 180) {
-      this.angle = 270;
-    } else {
-      this.angle = 0;
-    }
-    this.transform();
+    this.$animate.addClass(this.$element, 'ng-enter').then( () => {
+      this.$timeout(() => {
+        if (this.url) this.load(this.url);
+      }, 1000);
+    });
   }
 
   getPageCount() {
@@ -128,12 +46,13 @@ export default class PdfViewerController {
   goToPage(newVal) {
     if (this.pdfDoc !== null && angular.isDefined(this.pdfDoc)) {
       this.currentPage = newVal;
-      this.renderPage(newVal);
+      let pageId = `pageContainer${newVal}${this.$scope.delegateHandle}`;
+      this.$location.hash(pageId);
     }
   }
 
   load(url) {
-    let docInitParams = {};
+    var docInitParams = {};
 
     if (angular.isString(url)) {
       docInitParams.url = url;
@@ -150,14 +69,95 @@ export default class PdfViewerController {
       .getDocument(docInitParams)
       .then((_pdfDoc) => {
 
+        this.$element.removeClass('transparent');
+
         this.pdfDoc = _pdfDoc;
+
         this.$scope.$apply(() => {
           this.$scope.pageCount = _pdfDoc.numPages;
-          this.renderPage(1);
+
+          let pdfContainer = angular.element(this.$element).find("div")[2];
+          for (let i=0; i<_pdfDoc.numPages; i++) {
+            let page = this.createEmptyPage(i+1);
+            pdfContainer.append(page);
+          }
+
+          this.pdfDoc.getPage(1).then((page) => {this.handlePages(page)});
+
+          angular.element(pdfContainer).bind('scroll', (evt) => {
+            let currentPage = Math.round(evt.currentTarget.scrollTop / this.pageHeight) + 1;
+            this.currentPage = currentPage;
+            this.$scope.$broadcast("currentPageChanged");
+          });
         });
-      }, function (error) {
+      }, (error) => {
         this.$log.error(error);
         return this.$q.reject(error);
+      })
+  }
+
+  handlePages(pdfPage)
+  {
+    let page = this.$document.getElementById(`pageContainer${this.currentPage}${this.$scope.delegateHandle}`);
+    let canvas = page.querySelector('canvas');
+    let wrapper = page.querySelector('.canvasWrapper');
+    let container = page.querySelector('.textLayer');
+    let canvasContext = canvas.getContext('2d');
+    let viewport = pdfPage.getViewport(606 / pdfPage.getViewport(1.0).width)
+    this.pageHeight = viewport.height;
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    page.style.width = `${viewport.width}px`;
+    page.style.height = `${viewport.height}px`;
+    wrapper.style.width = `${viewport.width}px`;
+    wrapper.style.height = `${viewport.height}px`;
+    container.style.width = `${viewport.width}px`;
+    container.style.height = `${viewport.height}px`;
+
+    pdfPage.render({
+      canvasContext,
+      viewport
+    });
+
+    pdfPage.getTextContent().then(textContent => {
+      PDFJS.renderTextLayer({
+        textContent,
+        container,
+        viewport,
+        textDivs: []
       });
+    });
+
+    page.setAttribute('data-loaded', 'true');
+
+    //Move to next page
+    this.currentPage++;
+    if ( this.pdfDoc !== null && this.currentPage <= this.$scope.pageCount )
+    {
+      this.pdfDoc.getPage( this.currentPage ).then((page) => {this.handlePages(page) });
+    }
+  }
+
+  createEmptyPage(num) {
+    let page = this.$document.createElement('div');
+    let canvas = this.$document.createElement('canvas');
+    let wrapper = this.$document.createElement('div');
+    let textLayer = this.$document.createElement('div');
+
+    page.className = 'page';
+    wrapper.className = 'canvasWrapper';
+    textLayer.className = 'textLayer';
+
+    page.setAttribute('id', `pageContainer${num}${this.$scope.delegateHandle}`);
+    page.setAttribute('data-loaded', 'false');
+    page.setAttribute('data-page-number', num);
+
+    canvas.setAttribute('id', `page${num}`);
+
+    page.appendChild(wrapper);
+    page.appendChild(textLayer);
+    wrapper.appendChild(canvas);
+
+    return page;
   }
 }
