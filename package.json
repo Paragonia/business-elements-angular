@@ -3,6 +3,7 @@
   "version": "0.0.12",
   "description": "Business Elements Angular module.",
   "main": "lib/index.js",
+  "style": "dist/style.css",
   "scripts": {
     "build": "babel src --out-dir lib",
     "dist": "mkdir -p dist && rm -f dist/*.* && npm run dist-dev && npm run dist-noshim && npm run dist-prod && npm run dist-css",
@@ -54,7 +55,8 @@
     "postcss-cli": "^2.6.0",
     "sinon": "^1.17.3",
     "uglifyify": "^3.0.1",
-    "uuid": "^2.0.2"
+    "uuid": "^2.0.2",
+    "webpack-stream": "~2.1.1"
   },
   "dependencies": {
     "business-elements": "^0.0.90",

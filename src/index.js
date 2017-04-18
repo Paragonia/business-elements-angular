@@ -1,6 +1,5 @@
 "use strict";
-/*global angular*/
-/*global PDFJS:false*/
+/*global angular:false PDFJS:false*/
 
 
 // further peer dependencies should be required here
