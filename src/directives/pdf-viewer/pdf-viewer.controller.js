@@ -15,7 +15,7 @@ export default class PdfViewerController {
     this.$timeout = $timeout;
     // Register the instance!
     $scope.delegateHandle = $scope.$eval($attrs.delegateHandle);
-    var deregisterInstance = pdfService._registerInstance(this, $scope.delegateHandle);
+    const deregisterInstance = pdfService._registerInstance(this, $scope.delegateHandle);
     // De-Register on destory!
     $scope.$on('$destroy', () => {
       deregisterInstance();
@@ -30,7 +30,9 @@ export default class PdfViewerController {
 
     this.$animate.addClass(this.$element, 'ng-enter').then( () => {
       this.$timeout(() => {
-        if (this.url) this.load(this.url);
+        if (this.url) {
+          this.load(this.url);
+        }
       }, 1000);
     });
   }
@@ -46,13 +48,13 @@ export default class PdfViewerController {
   goToPage(newVal) {
     if (this.pdfDoc !== null && angular.isDefined(this.pdfDoc)) {
       this.currentPage = newVal;
-      let pageId = `pageContainer${newVal}${this.$scope.delegateHandle}`;
+      const pageId = `pageContainer${newVal}${this.$scope.delegateHandle}`;
       this.$location.hash(pageId);
     }
   }
 
   load(url) {
-    var docInitParams = {};
+    let docInitParams = {};
 
     if (angular.isString(url)) {
       docInitParams.url = url;
@@ -82,7 +84,7 @@ export default class PdfViewerController {
             pdfContainer.append(page);
           }
 
-          this.pdfDoc.getPage(1).then((page) => {this.handlePages(page)});
+          this.pdfDoc.getPage(1).then((page) => {this.handlePages(page);});
 
           angular.element(pdfContainer).bind('scroll', (evt) => {
             let currentPage = Math.round(evt.currentTarget.scrollTop / this.pageHeight) + 1;
@@ -93,7 +95,7 @@ export default class PdfViewerController {
       }, (error) => {
         this.$log.error(error);
         return this.$q.reject(error);
-      })
+      });
   }
 
   handlePages(pdfPage)
@@ -103,7 +105,7 @@ export default class PdfViewerController {
     let wrapper = page.querySelector('.canvasWrapper');
     let container = page.querySelector('.textLayer');
     let canvasContext = canvas.getContext('2d');
-    let viewport = pdfPage.getViewport(606 / pdfPage.getViewport(1.0).width)
+    let viewport = pdfPage.getViewport(606 / pdfPage.getViewport(1.0).width);
     this.pageHeight = viewport.height;
     canvas.width = viewport.width;
     canvas.height = viewport.height;
@@ -134,7 +136,7 @@ export default class PdfViewerController {
     this.currentPage++;
     if ( this.pdfDoc !== null && this.currentPage <= this.$scope.pageCount )
     {
-      this.pdfDoc.getPage( this.currentPage ).then((page) => {this.handlePages(page) });
+      this.pdfDoc.getPage( this.currentPage ).then((page) => {this.handlePages(page); });
     }
   }
 
