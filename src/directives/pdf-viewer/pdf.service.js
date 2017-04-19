@@ -1,8 +1,6 @@
-export default class PDFService {
-  constructor($log) {
-    'ngInject';
+export default class PdfService {
 
-    this.$log = $log;
+  constructor() {
     const methodNames = [
       "prev",
       "next",
