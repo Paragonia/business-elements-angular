@@ -5,6 +5,8 @@
 // further peer dependencies should be required here
 require("business-elements");
 require('pdfjs-dist');
+require('pdfjs-dist/web/pdf_viewer');
+require('pdfjs-dist/web/compatibility');
 PDFJS.workerSrc = require('pdfjs-dist/build/pdf.worker');
 
 // code for the module should be imported
