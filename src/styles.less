@@ -26,7 +26,9 @@
   }
 
   .canvas-container {
-    height: ~"calc(100vh - 11.867rem)";
+    max-height: 100%;
+    width: 100%;
+    max-width: 100%;
     overflow-y: scroll;
   }
 
@@ -111,8 +113,8 @@
 
 .pdfViewer .page {
   direction: ltr;
-  width: 816px;
-  height: 1056px;
+  width: ~"calc(100% - 18px)";
+  height: 100%;
   overflow: visible;
   border: 9px solid transparent;
   background-clip: content-box;
@@ -120,10 +122,13 @@
   background-color: white;
   position: relative;
   margin: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .pdfViewer.removePageBorders .page {
-  margin: 0px auto 10px auto;
+  margin: 0 auto 10px auto;
   border: none;
 }
 

@@ -105,16 +105,27 @@ export default class PdfViewerController {
     let wrapper = page.querySelector('.canvasWrapper');
     let container = page.querySelector('.textLayer');
     let canvasContext = canvas.getContext('2d');
-    let viewport = pdfPage.getViewport(606 / pdfPage.getViewport(1.0).width);
+    let containerWidth = 540;
+    if(this.$document.getElementsByTagName("pdf-viewer")[0]) {
+      containerWidth = this.$document.getElementsByTagName("pdf-viewer")[0].offsetWidth;
+    }
+    let viewport = pdfPage.getViewport(containerWidth / pdfPage.getViewport(1.0).width);
     this.pageHeight = viewport.height;
     canvas.width = viewport.width;
     canvas.height = viewport.height;
+    let canvasContentWidth = viewport.width - 18;
+    let canvasContentHeight = viewport.height - 18;
     page.style.width = `${viewport.width}px`;
     page.style.height = `${viewport.height}px`;
-    wrapper.style.width = `${viewport.width}px`;
-    wrapper.style.height = `${viewport.height}px`;
-    container.style.width = `${viewport.width}px`;
-    container.style.height = `${viewport.height}px`;
+    wrapper.style.width = `${canvasContentWidth}px`;
+    wrapper.style.height = `${canvasContentHeight}px`;
+    container.style.width = `${canvasContentWidth}px`;
+    container.style.height = `${canvasContentHeight}px`;
+
+    console.log("page width = ", canvas.width);
+    console.log("page height = ", canvas.height);
+    console.log("page inner elements width = ", canvasContentWidth);
+    console.log("page inner elements height = ", canvasContentHeight);
 
     pdfPage.render({
       canvasContext,
