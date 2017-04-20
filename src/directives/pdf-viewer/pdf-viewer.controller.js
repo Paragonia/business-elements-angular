@@ -122,11 +122,6 @@ export default class PdfViewerController {
     container.style.width = `${canvasContentWidth}px`;
     container.style.height = `${canvasContentHeight}px`;
 
-    console.log("page width = ", canvas.width);
-    console.log("page height = ", canvas.height);
-    console.log("page inner elements width = ", canvasContentWidth);
-    console.log("page inner elements height = ", canvasContentHeight);
-
     pdfPage.render({
       canvasContext,
       viewport
