@@ -1,6 +1,6 @@
 {
   "name": "business-elements-angular",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Business Elements Angular module.",
   "main": "lib/index.js",
   "style": "dist/style.css",
