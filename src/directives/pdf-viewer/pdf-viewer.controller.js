@@ -88,8 +88,7 @@ export default class PdfViewerController {
 
           angular.element(pdfContainer).bind('scroll', (evt) => {
             let currentPage = Math.round(evt.currentTarget.scrollTop / this.pageHeight) + 1;
-            this.currentPage = currentPage;
-            this.$scope.$broadcast("currentPageChanged");
+            this.$scope.$broadcast("currentPageChanged", {"currentPage":currentPage});
           });
         });
       }, (error) => {

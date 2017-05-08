@@ -58,11 +58,9 @@ export default function pdfViewerToolbar() {
           .getCurrentPage();
       };
 
-      scope.$on('currentPageChanged', () => {
+      scope.$on('currentPageChanged', (event, args) => {
         scope.$applyAsync(() => {
-          scope.currentPage = scope.pdfService
-            .$getByHandle(id)
-            .getCurrentPage();
+          scope.currentPage = args.currentPage;
         });
       });
     }

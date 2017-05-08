@@ -1,6 +1,6 @@
 {
   "name": "business-elements-angular",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Business Elements Angular module.",
   "main": "lib/index.js",
   "style": "dist/style.css",
@@ -59,7 +59,7 @@
     "webpack-stream": "~2.1.1"
   },
   "dependencies": {
-    "business-elements": "^0.0.90",
+    "business-elements": "^0.0.102",
     "angular": "1.5.8",
     "pdfjs-dist": "1.7.418"
   }
