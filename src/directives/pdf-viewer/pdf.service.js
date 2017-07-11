@@ -16,7 +16,7 @@ export default class PdfService {
 
     const delegate = this;
 
-    let instances = this._instances = [];
+    const instances = this._instances = [];
     this._registerInstance = function (instance, handle) {
       instance.delegateHandle = handle;
       instances.push(instance);

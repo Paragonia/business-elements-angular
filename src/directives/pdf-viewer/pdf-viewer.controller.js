@@ -54,7 +54,7 @@ export default class PdfViewerController {
   }
 
   load(url) {
-    let docInitParams = {};
+    const docInitParams = {};
 
     if (angular.isString(url)) {
       docInitParams.url = url;
@@ -78,16 +78,18 @@ export default class PdfViewerController {
         this.$scope.$apply(() => {
           this.$scope.pageCount = _pdfDoc.numPages;
 
-          let pdfContainer = angular.element(this.$element).find("div")[2];
+          const pdfContainer = angular.element(this.$element).find("div")[2];
           for (let i=0; i<_pdfDoc.numPages; i++) {
-            let page = this.createEmptyPage(i+1);
+            const page = this.createEmptyPage(i+1);
             pdfContainer.append(page);
           }
 
-          this.pdfDoc.getPage(1).then((page) => {this.handlePages(page);});
+          this.pdfDoc.getPage(1).then((page) => {
+            this.handlePages(page);
+          });
 
           angular.element(pdfContainer).bind('scroll', (evt) => {
-            let currentPage = Math.round(evt.currentTarget.scrollTop / this.pageHeight) + 1;
+            const currentPage = Math.round(evt.currentTarget.scrollTop / this.pageHeight) + 1;
             this.$scope.$broadcast("currentPageChanged", {"currentPage":currentPage});
           });
         });
@@ -99,21 +101,21 @@ export default class PdfViewerController {
 
   handlePages(pdfPage)
   {
-    let page = this.$document.getElementById(`pageContainer${this.currentPage}${this.$scope.delegateHandle}`);
-    let canvas = page.querySelector('canvas');
-    let wrapper = page.querySelector('.canvasWrapper');
-    let container = page.querySelector('.textLayer');
-    let canvasContext = canvas.getContext('2d');
+    const page = this.$document.getElementById(`pageContainer${this.currentPage}${this.$scope.delegateHandle}`);
+    const canvas = page.querySelector('canvas');
+    const wrapper = page.querySelector('.canvasWrapper');
+    const container = page.querySelector('.textLayer');
+    const canvasContext = canvas.getContext('2d');
     let containerWidth = 540;
     if(this.$document.getElementsByTagName("pdf-viewer")[0]) {
       containerWidth = this.$document.getElementsByTagName("pdf-viewer")[0].offsetWidth;
     }
-    let viewport = pdfPage.getViewport(containerWidth / pdfPage.getViewport(1.0).width);
+    const viewport = pdfPage.getViewport(containerWidth / pdfPage.getViewport(1.0).width);
     this.pageHeight = viewport.height;
     canvas.width = viewport.width;
     canvas.height = viewport.height;
-    let canvasContentWidth = viewport.width - 18;
-    let canvasContentHeight = viewport.height - 18;
+    const canvasContentWidth = viewport.width - 18;
+    const canvasContentHeight = viewport.height - 18;
     page.style.width = `${viewport.width}px`;
     page.style.height = `${viewport.height}px`;
     wrapper.style.width = `${canvasContentWidth}px`;
@@ -141,15 +143,17 @@ export default class PdfViewerController {
     this.currentPage++;
     if ( this.pdfDoc !== null && this.currentPage <= this.$scope.pageCount )
     {
-      this.pdfDoc.getPage( this.currentPage ).then((page) => {this.handlePages(page); });
+      this.pdfDoc.getPage( this.currentPage ).then((page) => {
+        this.handlePages(page);
+      });
     }
   }
 
   createEmptyPage(num) {
-    let page = this.$document.createElement('div');
-    let canvas = this.$document.createElement('canvas');
-    let wrapper = this.$document.createElement('div');
-    let textLayer = this.$document.createElement('div');
+    const page = this.$document.createElement('div');
+    const canvas = this.$document.createElement('canvas');
+    const wrapper = this.$document.createElement('div');
+    const textLayer = this.$document.createElement('div');
 
     page.className = 'page';
     wrapper.className = 'canvasWrapper';
