@@ -7,6 +7,7 @@ require("business-elements");
 require('pdfjs-dist');
 require('pdfjs-dist/web/pdf_viewer');
 require('pdfjs-dist/web/compatibility');
+require('./components/components.module').default();
 
 PDFJS.workerSrc = require('pdfjs-dist/build/pdf.worker');
 
@@ -25,7 +26,7 @@ import PdfViewerController from './directives/pdf-viewer/pdf-viewer.controller';
 import PdfViewerToolbarController from './directives/pdf-viewer/pdf-viewer-toolbar.controller';
 import PdfService from './directives/pdf-viewer/pdf.service';
 
-angular.module("businessElementsAngular", [])
+angular.module("businessElementsAngular", ['app.be-components'])
   .provider("businessElementsApi", new BusinessElementsApiProvider())
   .provider("stringUtil", stringUtil)
   .provider('parsingService', ParsingService)
