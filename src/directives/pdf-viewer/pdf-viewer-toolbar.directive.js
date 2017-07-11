@@ -17,7 +17,7 @@ export default function pdfViewerToolbar() {
     },
     controller: 'PdfViewerToolbarController',
     link: function (scope) {
-      let id = scope.delegateHandle;
+      const id = scope.delegateHandle;
       scope.currentPage = 1;
       scope.prev = function () {
         scope.pdfService

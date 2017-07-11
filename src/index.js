@@ -7,6 +7,7 @@ require("business-elements");
 require('pdfjs-dist');
 require('pdfjs-dist/web/pdf_viewer');
 require('pdfjs-dist/web/compatibility');
+
 PDFJS.workerSrc = require('pdfjs-dist/build/pdf.worker');
 
 // code for the module should be imported
@@ -17,17 +18,20 @@ import avatarSrc from "./directives/avatar-src.directive";
 import transcludeReplace from "./directives/transclude-replace.directive";
 import validEmailaddress from "./directives/valid-emailaddress.directive";
 import validHandle from "./directives/valid-handle.directive";
+import ParsingService from "./services/parsing-service";
 import pdfViewer from "./directives/pdf-viewer/pdf-viewer.directive";
 import pdfViewerToolbar from "./directives/pdf-viewer/pdf-viewer-toolbar.directive";
 import PdfViewerController from './directives/pdf-viewer/pdf-viewer.controller';
 import PdfViewerToolbarController from './directives/pdf-viewer/pdf-viewer-toolbar.controller';
 import PdfService from './directives/pdf-viewer/pdf.service';
 
-
 angular.module("businessElementsAngular", [])
   .provider("businessElementsApi", new BusinessElementsApiProvider())
   .provider("stringUtil", stringUtil)
-  .factory('pdfService', () => {return new PdfService();})
+  .provider('parsingService', ParsingService)
+  .factory('pdfService', () => {
+    return new PdfService();
+  })
   .controller('PdfViewerController', PdfViewerController)
   .controller('PdfViewerToolbarController', PdfViewerToolbarController)
   .directive("resourceSrc", resourceSrc)
