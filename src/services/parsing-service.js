@@ -9,19 +9,15 @@ export default class ParsingService {
   }
 
   parseContent(content) {
-    const parsedContent = new Map();
-
-    content.children.forEach((context) => {
-      const contextFrameName = context.element.content.data.value;
-      const contextFrameData = [];
-      context.children.forEach((contextFrame) => {
-        const frameData = this._getDataForFrame(contextFrame);
-        contextFrameData.push(frameData);
-      });
-      parsedContent.set(contextFrameName, contextFrameData);
-    });
-
-    return parsedContent;
+    return content.children.reduce((acc, context) => {
+      const frameName = context.element.content.data.value;
+      const frameData = context.children.reduce((childAcc, contextFrame) => {
+        childAcc.push(this.getFrameData(contextFrame));
+        return childAcc;
+      }, []);
+      acc.set(frameName, frameData);
+      return acc;
+    }, new Map());
   }
 
   getContentItems(sectionsArray, maxItems = null, itemCount = 0) {
@@ -43,7 +39,8 @@ export default class ParsingService {
       if (contentElement.item.type === "Content") {
         const sectionItem = {
           id: contentElement.item.data.contentId.data.valueCellId,
-          title: contentElement.item.data.title
+          title: contentElement.item.data.title,
+          url: contentElement.url
         };
         acc.push(sectionItem);
       }
@@ -57,29 +54,19 @@ export default class ParsingService {
     }));
   }
 
-  _getDataForFrame(contextFrame) {
-    const preparedContentFrame = Defiant.getSnapshot(contextFrame);
+  getFrameData(contextFrame) {
+    let preparedContentFrame = Defiant.getSnapshot(contextFrame);
 
-    const title = JSON.search(preparedContentFrame, '//*[attribute="story"]/value/title | //*[attribute="pattern"]/value/title | //*[attribute="name"]/value/name');
-    const type = JSON.search(preparedContentFrame, '//*[attribute="story"]/attribute | //*[attribute="pattern"]/attribute | //*[attribute="name"]/attribute');
+    let title = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/value/title | //*[attribute="name"]/value/name)[1]'));
+    let type = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/attribute)[1]'));
 
-    let contentMaturity = '';
-    let contentIntro = '';
-    let contentChapter = '';
-    let contentImage = '';
 
-    if (JSON.search(preparedContentFrame, '//*[attribute="pattern"]').length > 0) {
-      contentMaturity = JSON.search(preparedContentFrame, '//*[attribute="pattern"]/value/maturity');
-      contentIntro = JSON.search(preparedContentFrame, '//*[attribute="pattern"]/value/pattern');
-    } else if (JSON.search(preparedContentFrame, '//*[attribute="story"]').length > 0) {
-      contentIntro = JSON.search(preparedContentFrame, '//*[attribute="story"]/value/story');
-      contentChapter = JSON.search(preparedContentFrame, '//*[attribute="story"]/value/title');
-    } else {
-      contentIntro = JSON.search(preparedContentFrame, '//*[attribute="name"]/value/name');
-    }
+    let contentImage = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="image"]/value/href)[1]'));
+    let contentMaturity = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="pattern"]/value/maturity)[1]'));
+    let contentChapter = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="story"]/value/title)[1]'));
+    let contentIntro = this.getFirstArrayValue(JSON.search(preparedContentFrame, '//value/pattern | //value/story | //value/force | //value/solution | //*[attribute="name"]/value/name'));
 
-    contentImage = JSON.search(preparedContentFrame, '//*[attribute="image"]/value/href');
-    const paragraphs = [];
+    let paragraphs = [];
     let contentParagraphs = '';
 
     let contentId = '';
@@ -91,17 +78,13 @@ export default class ParsingService {
       contentParagraphs = JSON.search(preparedContentFrame, '//*[contentType="Section"]/..')[0].children;
     }
 
-    contentParagraphs = contentParagraphs.filter((paragraph) => {
-      return paragraph.element.content.data.attribute !== "pattern" && paragraph.element.content.data.attribute !== "story";
-    });
-
-    if (contentImage.length > 0) {
+    if (contentImage && contentImage.length > 0) {
       //filter first image already collected
       contentParagraphs = contentParagraphs.filter((paragraph) => {
         if (paragraph.element.id.type === "ValueCell" && paragraph.children.length > 0) {
-          return paragraph.children[0].element.content.data.value.href !== contentImage[0];
+          return paragraph.children[0].element.content.data.value.href !== contentImage;
         } else if (paragraph.element.id.type === "Value") {
-          return paragraph.element.content.data.value.href !== contentImage[0];
+          return paragraph.element.content.data.value.href !== contentImage;
         } else {
           return true;
         }
@@ -110,11 +93,13 @@ export default class ParsingService {
 
     if (contentParagraphs.indexOf(undefined) === -1 && contentParagraphs.length > 0) {
       contentParagraphs.forEach((paragraph) => {
-        const data = JSON.search(paragraph, '//*[contentType="Component"]/content/data');
+        let data = JSON.search(paragraph, '//*[contentType="Component"]/content/data');
         if (data.length > 1) {
           data[0].value.sidenote = data[1].value.description;
         }
-        paragraphs.push(data[0]);
+        if (data[0]) {
+          paragraphs.push(data[0]);
+        }
       });
     } else {
       paragraphs.push({
@@ -122,37 +107,33 @@ export default class ParsingService {
         "value": {
           "description": "*Content coming soon...*"
         }
-      });
+      })
     }
 
     return {
       // TODO - store as card ID the entire serialized element.id field
       id: contentId,
-      type: this._getValueOrDefault(type[0]),
-      description: this._getValueOrDefault(title[0]),
-      classification: this._getValueOrDefault(contextFrame.element.classifications[0]),
+      type: ParsingService.getValueOrDefault(type),
+      description: ParsingService.getValueOrDefault(title),
+      classification: ParsingService.getValueOrDefault(contextFrame.element.classifications[0]),
       content: {
-        maturity: contentMaturity[0],
-        title: this._getValueOrDefault(title[0], this._getValueOrDefault(title[0])),
-        intro: this._getValueOrDefault(contentIntro[0]),
-        chapter: this._getValueOrDefault(contentChapter[0]),
-        type: this._getValueOrDefault(type[0]),
-        img: this._getValueOrDefault(contentImage[0]),
+        maturity: contentMaturity,
+        title: ParsingService.getValueOrDefault(title, ParsingService.getValueOrDefault(title)),
+        intro: ParsingService.getValueOrDefault(contentIntro),
+        chapter: ParsingService.getValueOrDefault(contentChapter),
+        type: ParsingService.getValueOrDefault(type),
+        img: ParsingService.getValueOrDefault(contentImage),
         paragraphs: paragraphs
       }
     };
   }
 
-  _getValueOrDefault(value, defaultValue) {
-    if (value) {
-      return value;
-    } else {
-      if (defaultValue) {
-        return defaultValue;
-      } else {
-        return "";
-      }
-    }
+  static getValueOrDefault(value, defaultValue) {
+    return (value) || (defaultValue || "");
+  }
+
+  getFirstArrayValue(arrayValues) {
+    return angular.isArray(arrayValues) && arrayValues[0];
   }
 
 
