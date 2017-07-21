@@ -55,21 +55,15 @@ export default class ParsingService {
   }
 
   getFrameData(contextFrame) {
-    let preparedContentFrame = Defiant.getSnapshot(contextFrame);
+    const preparedContentFrame = Defiant.getSnapshot(contextFrame);
 
-    let title = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/value/title | //*[attribute="name"]/value/name)[1]'));
-    let type = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/attribute)[1]'));
+    let contentChapter, contentIntro, contentId, contentParagraphs = [];
+    const paragraphs = [];
+    const title = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/value/title | //*[attribute="name"]/value/name)[1]'));
+    const type = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/attribute)[1]'));
+    const classification = this.getFirstArrayValue(contextFrame.element.classifications);
+    const contentMaturity = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="pattern"]/value/maturity)[1]'));
 
-
-    let contentImage = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="image"]/value/href)[1]'));
-    let contentMaturity = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="pattern"]/value/maturity)[1]'));
-    let contentChapter = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="story"]/value/title)[1]'));
-    let contentIntro = this.getFirstArrayValue(JSON.search(preparedContentFrame, '//value/pattern | //value/story | //value/force | //value/solution | //*[attribute="name"]/value/name'));
-
-    let paragraphs = [];
-    let contentParagraphs = '';
-
-    let contentId = '';
     if (contextFrame.element.id.data.valueCellId) {
       contentId = contextFrame.element.id.data.valueCellId;
       contentParagraphs = JSON.search(preparedContentFrame, '//*[contentType="Section"]/..');
@@ -78,8 +72,20 @@ export default class ParsingService {
       contentParagraphs = JSON.search(preparedContentFrame, '//*[contentType="Section"]/..')[0].children;
     }
 
+    const contentCandidate = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//element//*[attribute="pattern"]/../.. | //element//*[attribute="story"]/../.. | //element//*[attribute="force"]/../.. | //element//*[attribute="solution"]/../..)[1]'));
+
+    if (contentCandidate) {
+      contentIntro = this.getFirstArrayValue(JSON.search(contentCandidate, '(//content//value/pattern | //content//value/story | //content//value/force | //content//value/solution)[1]'));
+      contentChapter = this.getFirstArrayValue(JSON.search(contentCandidate, '(//content//value/title)[1]'));
+      //filter out valueId (paragraph), its already collected in /content/intro & /content/chapter
+      contentParagraphs = contentParagraphs.filter((paragraph) => {
+        return (JSON.search(paragraph, '//*[valueId="' + contentCandidate.id.data.valueId + '"]')).length === 0;
+      });
+    }
+
+    const contentImage = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="image"]/value/href)[1]'));
     if (contentImage && contentImage.length > 0) {
-      //filter first image already collected
+      //filter first image already collected in /content/img
       contentParagraphs = contentParagraphs.filter((paragraph) => {
         if (paragraph.element.id.type === "ValueCell" && paragraph.children.length > 0) {
           return paragraph.children[0].element.content.data.value.href !== contentImage;
@@ -93,7 +99,7 @@ export default class ParsingService {
 
     if (contentParagraphs.indexOf(undefined) === -1 && contentParagraphs.length > 0) {
       contentParagraphs.forEach((paragraph) => {
-        let data = JSON.search(paragraph, '//*[contentType="Component"]/content/data');
+        const data = JSON.search(paragraph, '//*[contentType="Component"]/content/data');
         if (data.length > 1) {
           data[0].value.sidenote = data[1].value.description;
         }
@@ -102,6 +108,7 @@ export default class ParsingService {
         }
       });
     } else {
+      // no paragraphs found; add placeholder data.
       paragraphs.push({
         "attribute": "description",
         "value": {
@@ -112,13 +119,13 @@ export default class ParsingService {
 
     return {
       // TODO - store as card ID the entire serialized element.id field
-      id: contentId,
+      id: ParsingService.getValueOrDefault(contentId),
       type: ParsingService.getValueOrDefault(type),
       description: ParsingService.getValueOrDefault(title),
-      classification: ParsingService.getValueOrDefault(contextFrame.element.classifications[0]),
+      classification: ParsingService.getValueOrDefault(classification),
       content: {
-        maturity: contentMaturity,
-        title: ParsingService.getValueOrDefault(title, ParsingService.getValueOrDefault(title)),
+        maturity: ParsingService.getValueOrDefault(contentMaturity),
+        title: ParsingService.getValueOrDefault(title),
         intro: ParsingService.getValueOrDefault(contentIntro),
         chapter: ParsingService.getValueOrDefault(contentChapter),
         type: ParsingService.getValueOrDefault(type),
@@ -135,6 +142,5 @@ export default class ParsingService {
   getFirstArrayValue(arrayValues) {
     return angular.isArray(arrayValues) && arrayValues[0];
   }
-
 
 }
