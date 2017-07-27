@@ -1,5 +1,5 @@
 export default class PublicationCardController {
-  constructor($scope, $sce, marked, uuid, api, valuePreviewService) {
+  constructor($scope, $sce, marked, uuid, api) {
     'ngInject';
 
     this.$scope = $scope;
@@ -7,7 +7,7 @@ export default class PublicationCardController {
     this.uuid = uuid;
     this.marked = marked;
     this.api = api;
-    this.valuePreviewService = valuePreviewService;
+    //this.valuePreviewService = valuePreviewService;
 
     this.displayPDFImage = true;
     this.fullscreenCard = false;
@@ -16,7 +16,7 @@ export default class PublicationCardController {
       this.showFooter = false;
     }
 
-    this.valuePreviewService.setAttributeForms(this.$scope.card.content.paragraphs, this.$scope.attributes);
+    //this.valuePreviewService.setAttributeForms(this.$scope.card.content.paragraphs, this.$scope.attributes);
 
     this.cardTitle = this.$scope.card.content.title;
     this.$scope.cardTitle = this.cardTitle.replace(/\s/g,'').toLowerCase();

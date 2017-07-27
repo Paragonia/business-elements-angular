@@ -13,17 +13,44 @@ export default class PublicationTocController {
     };
   }
 
-  displayItemById(itemId) {
-    this.$scope.onDisplayItemId({itemId: itemId});
+  displayItemById(itemId, itemUrl) {
+    this.setSectionOpenBasedOnSelectedItem(this.sections, itemId);
+    this.$scope.onDisplayItemId({itemId: itemId, itemUrl: itemUrl});
+  }
+
+  setSectionOpenBasedOnSelectedItem(sectionsArray, itemId) {
+    // if section does not have any siblings, it is always opened
+    const hasOneSection = this.isSingleSection(sectionsArray);
+
+    return sectionsArray.reduce((acc, sectionElement) => {
+      const doesChildItemMatchesSelectedItemId = angular.isDefined(sectionElement.items.find((item) => {
+        const foundItem = item.id === itemId;
+        item.selected = foundItem;
+        return foundItem;
+      }));
+      if (!doesChildItemMatchesSelectedItemId) {
+        acc = this.setSectionOpenBasedOnSelectedItem(sectionElement.children, itemId);
+      } else {
+        acc = true;
+      }
+      if (!hasOneSection && !acc) {
+        sectionElement.open = acc;
+      }
+      return acc;
+    }, false);
   }
 
   convertToSections(sectionsArray, sectionLevel) {
+    // if section does not have any siblings, it is always opened
+    const hasOneSection = this.isSingleSection(sectionsArray);
+
     return sectionsArray.reduce((acc, sectionElement) => {
       if (sectionElement.item.type === "Classification") {
         const section = {
           "classification" : sectionElement.item.data.classification,
           "items" : this.parsingService.convertToSectionItems(sectionElement.children),
-          "level" : sectionLevel
+          "level" : sectionLevel,
+          'open' : hasOneSection
         };
 
         if (this.parsingService.hasChildSections(sectionElement)) {
@@ -45,6 +72,11 @@ export default class PublicationTocController {
     }
   }
 
+  isSingleSection(sectionsArray) {
+    return sectionsArray.length === 1;
+  }
 
-
+  isSingleRootSection() {
+    return this.isSingleSection(this.sections);
+  }
 }
