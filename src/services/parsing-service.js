@@ -114,7 +114,7 @@ export default class ParsingService {
         "value": {
           "description": "*Content coming soon...*"
         }
-      })
+      });
     }
 
     return {
