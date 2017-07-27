@@ -1,22 +1,27 @@
 export default class PublicationCardController {
-  constructor($scope, $sce, marked, uuid, api) {
+  constructor($scope, $location, $sce, marked, uuid, api, stringUtil) {
     'ngInject';
 
     this.$scope = $scope;
+    this.$location = $location;
     this.$sce = $sce;
     this.uuid = uuid;
     this.marked = marked;
     this.api = api;
-    //this.valuePreviewService = valuePreviewService;
+    this.stringUtil = stringUtil;
 
     this.displayPDFImage = true;
     this.fullscreenCard = false;
 
-    if (angular.isUndefined(this.$scope.showFooter)) {
-      this.showFooter = false;
-    }
+    /* copy link */
+    this.sharableLink = "";
+    this.showShareLinkHolder = false;
+    this.linkCopied = false;
+    
 
-    //this.valuePreviewService.setAttributeForms(this.$scope.card.content.paragraphs, this.$scope.attributes);
+    this.showFooter = this.$scope.showFooter || false;
+    this.showCloseCardButton = this.$scope.showCloseCardButton || false;
+    this.showFullScreenButton = this.$scope.showCloseCardButton || false;
 
     this.cardTitle = this.$scope.card.content.title;
     this.$scope.cardTitle = this.cardTitle.replace(/\s/g,'').toLowerCase();
@@ -204,14 +209,35 @@ export default class PublicationCardController {
     }
   }
 
+  onNavigateTo(card, navigationType) {
+    this.$scope.onNavigationLinkClick({card: card, navigationType: navigationType});
+  }
+
+  onShare(card) {
+    this.linkCopied = false;
+    const cardTitle = card.url;
+    const exhibitionTitle = this.stringUtil.toUrlPath(card.selectedMenu);
+    const absoluteUrl = this.$location.absUrl();
+    this.sharableLink = absoluteUrl.substr(0, absoluteUrl.indexOf("#")) + "share/" + exhibitionTitle + "/" + cardTitle;
+
+    this.showRequestTouchHolder = false;
+    this.showShareLinkHolder = !this.showShareLinkHolder;
+  }
+
+  copySuccess() {
+    this.linkCopied = true;
+  }
+  
+
   //GENERAL CARD BEHAVIOR
-  closeCard(card) {
-    this.$scope.$emit("closePublishingCard", card);
+  onCloseCard(card) {
+    this.$scope.onCloseCardClick({card: card});
   }
 
   toggleFullscreenCard() {
     this.fullscreenCard = !this.fullscreenCard;
   }
+
 
 }
 

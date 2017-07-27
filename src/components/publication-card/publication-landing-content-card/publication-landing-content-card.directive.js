@@ -10,11 +10,11 @@ export default class PublicationLandingContentCardDirective {
         '<div class="content-card-header"> ' +
         '<div layout> ' +
         '<md-button aria-label="{{\'ACTION.CLOSE\'| translate}}" class="generic-hit-area-button margin-left-4" ' +
-        'ng-click="vm.closeCard(card)"> ' +
+        'ng-click="vm.onCloseCard(card)" ng-show="vm.showCloseCardButton"> ' +
         '<md-icon md-font-icon="icon-cancel"></md-icon> ' +
         '</md-button> ' +
         '<md-button aria-label="{{\'ACTION.TOGGLE_FULLSCREEN\'| translate}}" class="generic-hit-area-button margin-right-4" ' +
-        'ng-click="vm.toggleFullscreenCard()"> ' +
+        'ng-click="vm.toggleFullscreenCard()" ng-show="vm.showFullScreenButton"> ' +
         '<md-icon md-font-icon="icon-fullscreen" ng-if="!vm.fullscreenCard"></md-icon> ' +
         '<md-icon md-font-icon="icon-fullscreen-exit" ng-if="vm.fullscreenCard"></md-icon> ' +
         '</md-button> ' +
@@ -28,14 +28,14 @@ export default class PublicationLandingContentCardDirective {
         '<div class="landing-heading-content"> ' +
         '<div class="landing-heading-story" ng-bind-html="vm.getFirstTitle(card)"></div> ' +
         '<div class="landing-heading-title" ng-bind-html="vm.getFirstDescription(card)"></div> ' +
-        '<div class="landing-heading-name no-focus" ng-bind-html="vm.getFirstNugget(card)" ng-click="vm.goToHome()"></div> ' +
+        '<div class="landing-heading-name no-focus" ng-bind-html="vm.getFirstNugget(card)" ng-click="vm.onNavigateTo(card, \'nugget\')"></div> ' +
         '</div> ' +
         '</div> ' +
         '</div> ' +
         '</div> ' +
-        '<div class="content-card-footer" ng-if="vm.showFooter"> ' +
+        '<div class="content-card-footer" ng-show="vm.showFooter"> ' +
         '<md-button aria-label="Share" class="toolbar-icon disabled" ng-class="vm.showShareLinkHolder ? \'active\' : \'\'" ' +
-        'ng-click="vm.onShare()"> ' +
+        'ng-click="vm.onShare(card)"> ' +
         '<md-icon md-font-icon="icon-share"></md-icon> ' +
         '</md-button> ' +
         '<div class="share-link-holder" ng-if="vm.showShareLinkHolder"> ' +
@@ -62,7 +62,11 @@ export default class PublicationLandingContentCardDirective {
       scope: {
         card: '=',
         attributes: '=',
-        showFooter: '=?'
+        showFooter: '=?',
+        showCloseCardButton: '=?',
+        showFullScreenButton: '=?',
+        onNavigationLinkClick: '&',
+        onCloseCardClick: '&'
       }
     };
   }
