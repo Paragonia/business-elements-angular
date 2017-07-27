@@ -3,6 +3,6 @@ import PublicationTocSectionController from './publication-toc-section.controlle
 
 export default function () {
   angular.module('app.be-components.publication-toc-section', [])
-    .controller('PublicationTocSectionController', PublicationTocSectionController)
+    .controller('BePublicationTocSectionController', PublicationTocSectionController)
     .directive('bePublicationTocSection', () => new PublicationTocSectionDirective());
 }

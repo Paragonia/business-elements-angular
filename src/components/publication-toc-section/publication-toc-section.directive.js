@@ -33,7 +33,7 @@ export default class PublicationTocSectionDirective {
       '</div> ' +
       '</md-list> ' +
       '</div >',
-      controller: 'PublicationTocSectionController',
+      controller: 'BePublicationTocSectionController',
       controllerAs: 'sectionVm',
       scope: {
         onDisplayItemId: '&',
