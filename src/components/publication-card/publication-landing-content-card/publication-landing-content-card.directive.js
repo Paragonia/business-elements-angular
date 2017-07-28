@@ -61,7 +61,6 @@ export default class PublicationLandingContentCardDirective {
       controllerAs: 'vm',
       scope: {
         card: '=',
-        attributes: '=',
         showSocialShareButton: '=?',
         showCloseCardButton: '=?',
         showFullScreenButton: '=?',

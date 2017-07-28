@@ -18,8 +18,7 @@ export default class PublicationPreviewCardDirective {
       controller: 'BePublicationCardController',
       controllerAs: 'vm',
       scope: {
-        card: '=',
-        attributes: '='
+        card: '='
       }
     };
   }

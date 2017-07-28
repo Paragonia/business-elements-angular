@@ -73,7 +73,6 @@ export default class PublicationArticleCardDirective {
       controllerAs: 'vm',
       scope: {
         card: '=',
-        attributes: '=',
         showSocialShareButton: '=?',
         showCloseCardButton: '=?',
         showFullScreenButton: '=?',
