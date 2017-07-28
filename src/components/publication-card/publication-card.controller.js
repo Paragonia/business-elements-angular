@@ -51,18 +51,62 @@ export default class PublicationCardController {
       SOLUTION : "solution",
       PATTERN : "pattern",
       FORCE : "force",
-      NUGGET: "nugget"
+      NUGGET: "nugget",
+      VIDEO: "video",
+      YOUTUBE: "youtube",
+      DOCUMENT: "document"
 
     };
+  }
+
+  getCardType(card) {
+    const cardType = card.content.type;
+    return (cardType === "name") ? "article" : cardType;
+  }
+
+  getMaturity(card) {
+    const maturity = parseInt(card.content.maturity, 10);
+    return new Array(maturity);
+  }
+
+  getMarkedContent(content) {
+    return this.marked(content.replace(/&#13;/g, "\n"));
+  }
+
+  getImgHtml(paragraph, index) {
+    let img = '';
+    const sideNote = paragraph.value.sidenote;
+    if (sideNote) {
+      img =  '<figure><label class="margin-toggle" for="' + this.cardTitle + index + '">&#8853;</label><input type="checkbox" id="' + this.cardTitle + index + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNote) + '</span><img src="' + this.getImgDownloadUri(paragraph.value.href) + '" /></figure>';
+    } else {
+      img = '<img src="' + this.getImgDownloadUri(paragraph.value.href) + '" />';
+    }
+    return img;
+  }
+
+  getPdfDownloadUri(card) {
+    return this.api.getDownloadUri(card.content.resourceUri, 'original');
   }
 
   getImgDownloadUri(resourceUri) {
     return this.api.getDownloadUri(resourceUri, 'presentation');
   }
 
+  getYoutubeUri(paragraph) {
+    let youtubeId;
+    if (this.isOfAttributeType(paragraph, this.ContentType.VIDEO)) {
+      youtubeId = paragraph.value.provider.id;
+    } else if (this.isOfAttributeType(paragraph, this.ContentType.YOUTUBE)) {
+      youtubeId = paragraph.value.id;
+    }
+    return this.$sce.trustAsResourceUrl("https://www.youtube.com/embed/" + youtubeId);
+  }
+
+
   isOfAttributeType(paragraph, type) {
     return paragraph && paragraph['attribute'] && paragraph['attribute'] === type;
   }
+
 
   containsNugget(paragraph) {
     return this.isOfAttributeType(paragraph, this.ContentType.NUGGET);
@@ -72,16 +116,26 @@ export default class PublicationCardController {
     return angular.isDefined(this.getTextHtml(paragraph));
   }
 
+  containsText(paragraph) {
+    if(paragraph) {
+      return !this.containsParagraphImage(paragraph) && !this.containsDocument(paragraph) && !this.containsVideo(paragraph);
+    }
+  }
+
+  containsVideo(paragraph) {
+    return this.isOfAttributeType(paragraph, this.ContentType.VIDEO) || this.isOfAttributeType(paragraph, this.ContentType.YOUTUBE);
+  }
+
   containsParagraphImage(paragraph) {
     return this.isOfAttributeType(paragraph, this.ContentType.IMAGE);
   }
 
-  getMarkedHtml(value) {
-    return this.marked(value);
+  containsDocument(paragraph) {
+    return this.isOfAttributeType(paragraph, this.ContentType.DOCUMENT);
   }
 
-  getImgHtml(paragraph) {
-    return '<img src="' + this.getImgDownloadUri(paragraph.value.href) + '" />';
+  getMarkedHtml(value) {
+    return this.marked(value);
   }
 
   getParagraphHeader(paragraph) {
@@ -211,6 +265,52 @@ export default class PublicationCardController {
     }
   }
 
+  //Specification Deck
+  isDocument(card) {
+    return card.content.type === 'documentView';
+  }
+
+  getTextHtml(paragraph, index) {
+    let mainTextReplaced = this.replacePatternLink(paragraph.value.description);
+    if (paragraph.value.sidenote) {
+      let sideNoteReplaced = this.replacePatternLink(paragraph.value.sidenote);
+      return '<label class="margin-toggle" for="' + this.cardTitle + index + '">&#8853;</label><input type="checkbox" id="' + this.cardTitle + index + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNoteReplaced) + '</span>' + this.marked(mainTextReplaced);
+    } else {
+      return this.marked(mainTextReplaced);
+    }
+  }
+
+
+  replacePatternLink(str) {
+    if(angular.isUndefined(str)) {
+      return "";
+    }
+    if (str.indexOf("<pattern>") !== -1) {
+      str = this.getPatternLink(str);
+      str = this.replacePatternLink(str);
+      return str;
+    } else {
+      return str;
+    }
+  }
+
+  getPatternLink(str){
+    let startIndex = str.indexOf("<pattern>") + 9;
+    let endIndex = str.indexOf("</pattern>");
+    let value = str.slice(startIndex, endIndex);
+    let pattern = this.patterns.find(pattern => pattern.description.toLowerCase() === value.toLowerCase());
+    let link = '';
+    if(pattern){
+      let currentId = this.card.id;
+      let anchorId = pattern.id;
+      link =  '<a href="#" ng-click="vm.onClickPatternLink(\'' + currentId + '\', \'' + anchorId + '\')">' + value + '</a>';
+    } else {
+      link =  '*'+ value + '*';
+    }
+    return str.replace(/(<pattern>(.*?)<\/pattern>)/, link);
+  }
+
+  //GENERAL CARD BEHAVIOR
   onNavigateTo(card, navigationType) {
     this.$scope.onNavigationLinkClick({card: card, navigationType: navigationType});
   }
@@ -231,7 +331,6 @@ export default class PublicationCardController {
   }
 
 
-  //GENERAL CARD BEHAVIOR
   onCloseCard(card) {
     this.$scope.onCloseCardClick({card: card});
   }
@@ -240,7 +339,13 @@ export default class PublicationCardController {
     this.fullscreenCard = !this.fullscreenCard;
   }
 
+  onClickDocumentLink(cardId, title, uri) {
+    this.$scope.onDocumentLinkClick({cardId: cardId, title: title, uri: uri});
+  }
 
+  onClickPatternLink(cardId, pattern) {
+    this.$scope.onPatternLinkClick({cardId: cardId, pattern: pattern});
+  }
 }
 
 
