@@ -35,7 +35,7 @@ export default class PublicationLandingContentCardDirective {
         '</div> ' +
         '<div class="content-card-footer" ng-show="vm.showFooter"> ' +
         '<md-button aria-label="Share" class="toolbar-icon disabled" ng-class="vm.showShareLinkHolder ? \'active\' : \'\'" ' +
-        'ng-click="vm.onShare(card)"> ' +
+        'ng-click="vm.onShare(card)" ng-show="vm.showSocialShareButton"> ' +
         '<md-icon md-font-icon="icon-share"></md-icon> ' +
         '</md-button> ' +
         '<div class="share-link-holder" ng-if="vm.showShareLinkHolder"> ' +
@@ -62,7 +62,7 @@ export default class PublicationLandingContentCardDirective {
       scope: {
         card: '=',
         attributes: '=',
-        showFooter: '=?',
+        showSocialShareButton: '=?',
         showCloseCardButton: '=?',
         showFullScreenButton: '=?',
         onNavigationLinkClick: '&',

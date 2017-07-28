@@ -78,7 +78,9 @@ export default class PublicationArticleCardDirective {
         showCloseCardButton: '=?',
         showFullScreenButton: '=?',
         onNavigationLinkClick: '&',
-        onCloseCardClick: '&'
+        onCloseCardClick: '&',
+        onDocumentLinkClick: '&',
+        onPatternLinkClick: '&'
       }
     };
   }

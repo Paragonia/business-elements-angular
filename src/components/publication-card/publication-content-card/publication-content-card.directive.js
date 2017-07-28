@@ -65,11 +65,12 @@ export default class PublicationContentCardDirective {
       controllerAs: 'vm',
       scope: {
         card: '=',
-        showFooter: '=?',
         showCloseCardButton: '=?',
         showFullScreenButton: '=?',
         onNavigationLinkClick: '&',
-        onCloseCardClick: '&'
+        onCloseCardClick: '&',
+        onDocumentLinkClick: '&',
+        onPatternLinkClick: '&'
       }
     };
   }
