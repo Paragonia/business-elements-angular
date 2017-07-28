@@ -17,11 +17,12 @@ export default class PublicationCardController {
     this.sharableLink = "";
     this.showShareLinkHolder = false;
     this.linkCopied = false;
-    
 
-    this.showFooter = this.$scope.showFooter || false;
+
+    this.showSocialShareButton = this.$scope.showSocialShareButton || false;
     this.showCloseCardButton = this.$scope.showCloseCardButton || false;
-    this.showFullScreenButton = this.$scope.showCloseCardButton || false;
+    this.showFullScreenButton = this.$scope.showFullScreenButton || false;
+    this.hasNugget = false;
 
     this.cardTitle = this.$scope.card.content.title;
     this.$scope.cardTitle = this.cardTitle.replace(/\s/g,'').toLowerCase();
@@ -115,10 +116,11 @@ export default class PublicationCardController {
 
   getNuggetHtml(paragraph) {
     if (this.isOfAttributeType(paragraph, this.ContentType.NUGGET)) {
+      this.hasNugget = true;
       return this.marked(paragraph.value[this.ContentType.NUGGET]);
     }
   }
-  
+
   //LANDINGPAGE CARD
   getFirstTitle(card) {
     if (card.content.title) {
@@ -227,7 +229,7 @@ export default class PublicationCardController {
   copySuccess() {
     this.linkCopied = true;
   }
-  
+
 
   //GENERAL CARD BEHAVIOR
   onCloseCard(card) {
