@@ -135,6 +135,38 @@ export default class ParsingService {
     };
   }
 
+  /**
+   * From the provided parsedContent, find all patterns in paragraph and in contentItems and store the contentId and title.
+   *
+   * @param parsedContent the content in which patterns are looked for.
+   * @constructUrlFn a function reference to construct an url using the content-title.
+   */
+  findPatterns(parsedContent) {
+    const valueType = "pattern";
+    const contentArray = Array.from(parsedContent.values());
+    return contentArray[0].reduce((acc, value) => {
+      if (value.type === valueType) {
+        acc.push({
+          contentId: value.id,
+          pattern: value.description
+        });
+      }
+
+      if (value.content && value.content.paragraphs && value.content.paragraphs.length > 0) {
+        value.content.paragraphs.reduce((parAcc, par) => {
+          if (par.attribute === valueType) {
+            parAcc.push({
+              contentId: value.id,
+              pattern: par.value.title
+            });
+          }
+          return parAcc;
+        }, acc);
+      }
+      return acc;
+    }, []);
+  }
+
   static getValueOrDefault(value, defaultValue) {
     return (value) || (defaultValue || "");
   }

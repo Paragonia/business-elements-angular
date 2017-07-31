@@ -271,43 +271,13 @@ export default class PublicationCardController {
   }
 
   getTextHtml(paragraph, index) {
-    let mainTextReplaced = this.replacePatternLink(paragraph.value.description);
+    const mainTextReplaced = paragraph.value.description || "";
     if (paragraph.value.sidenote) {
-      let sideNoteReplaced = this.replacePatternLink(paragraph.value.sidenote);
+      const sideNoteReplaced = paragraph.value.sidenote || "";
       return '<label class="margin-toggle" for="' + this.cardTitle + index + '">&#8853;</label><input type="checkbox" id="' + this.cardTitle + index + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNoteReplaced) + '</span>' + this.marked(mainTextReplaced);
     } else {
       return this.marked(mainTextReplaced);
     }
-  }
-
-
-  replacePatternLink(str) {
-    if(angular.isUndefined(str)) {
-      return "";
-    }
-    if (str.indexOf("<pattern>") !== -1) {
-      str = this.getPatternLink(str);
-      str = this.replacePatternLink(str);
-      return str;
-    } else {
-      return str;
-    }
-  }
-
-  getPatternLink(str){
-    let startIndex = str.indexOf("<pattern>") + 9;
-    let endIndex = str.indexOf("</pattern>");
-    let value = str.slice(startIndex, endIndex);
-    let pattern = this.patterns.find(pattern => pattern.description.toLowerCase() === value.toLowerCase());
-    let link = '';
-    if(pattern){
-      let currentId = this.card.id;
-      let anchorId = pattern.id;
-      link =  '<a href="#" ng-click="vm.onClickPatternLink(\'' + currentId + '\', \'' + anchorId + '\')">' + value + '</a>';
-    } else {
-      link =  '*'+ value + '*';
-    }
-    return str.replace(/(<pattern>(.*?)<\/pattern>)/, link);
   }
 
   //GENERAL CARD BEHAVIOR

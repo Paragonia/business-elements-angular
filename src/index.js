@@ -16,6 +16,7 @@ import BusinessElementsApiProvider from "./services/business-elements-api.provid
 import stringUtil from "./util/string.util";
 import resourceSrc from "./directives/resource-src.directive";
 import avatarSrc from "./directives/avatar-src.directive";
+import pattern from "./directives/pattern.directive";
 import transcludeReplace from "./directives/transclude-replace.directive";
 import validEmailaddress from "./directives/valid-emailaddress.directive";
 import validHandle from "./directives/valid-handle.directive";
@@ -35,6 +36,7 @@ angular.module("businessElementsAngular", ['app.be-components'])
   })
   .controller('PdfViewerController', PdfViewerController)
   .controller('PdfViewerToolbarController', PdfViewerToolbarController)
+  .directive("pattern", pattern)
   .directive("resourceSrc", resourceSrc)
   .directive("avatarSrc", avatarSrc)
   .directive("ngTranscludeReplace", transcludeReplace)

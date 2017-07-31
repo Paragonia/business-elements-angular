@@ -45,7 +45,7 @@ export default class PublicationContentCardDirective {
         '<div ng-bind-html="vm.getImgHtml(paragraph, $index)"></div> ' +
         '</div> ' +
         '<div ng-if="vm.containsText(paragraph)"> ' +
-        '<div ng-bind-html="vm.getTextHtml(paragraph, $index)"></div> ' +
+        '<div bind-html-compile="vm.getTextHtml(paragraph, $index)"></div> ' +
         '</div> ' +
         '<div ng-if="vm.containsDocument(paragraph)"> ' +
         '<a href="#" ng-click="vm.onClickDocumentLink(card.id, paragraph.value.title, paragraph.value.href)" ng-bind="paragraph.value.title"></a> ' +
