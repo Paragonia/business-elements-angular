@@ -77,7 +77,9 @@ export default class PublicationCardController {
     let img = '';
     const sideNote = paragraph.value.sidenote;
     if (sideNote) {
-      img =  '<figure><label class="margin-toggle" for="' + this.cardTitle + index + '">&#8853;</label><input type="checkbox" id="' + this.cardTitle + index + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNote) + '</span><img src="' + this.getImgDownloadUri(paragraph.value.href) + '" /></figure>';
+      let cardTitle = this.cardTitle.replace(/\s/g,'').toLowerCase();
+      let sideNoteId = "" + cardTitle + index;
+      img =  '<figure><label class="margin-toggle" for="' + sideNoteId + '">&#8853;</label><input type="checkbox" id="' + sideNoteId + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNote) + '</span><img src="' + this.getImgDownloadUri(paragraph.value.href) + '" /></figure>';
     } else {
       img = '<img src="' + this.getImgDownloadUri(paragraph.value.href) + '" />';
     }
@@ -178,16 +180,16 @@ export default class PublicationCardController {
   //LANDINGPAGE CARD
   getFirstTitle(card) {
     if (card.content.title) {
-      return card.content.title;
+      return this.marked(card.content.title);
     } else {
-      const foundParagraph = card.content.paragraphs.find((paragraph) => this.containsParagraphHeader(paragraph));
+      const foundParagraph = card.content.paragraphs.find((paragraph) => this.containsParagraphText(paragraph));
       return this.getParagraphHeader(foundParagraph);
     }
   }
 
   getFirstDescription(card) {
     if (card.content.intro) {
-      return card.content.intro;
+      return this.marked(card.content.intro);
     } else {
       const foundParagraph = card.content.paragraphs.find((paragraph) => this.containsParagraphText(paragraph));
       return this.getTextHtml(foundParagraph);
@@ -196,7 +198,11 @@ export default class PublicationCardController {
 
   getFirstNugget(card) {
     const foundParagraph = card.content.paragraphs.find((paragraph) => this.containsNugget(paragraph));
-    return this.getNuggetHtml(foundParagraph);
+    if(foundParagraph) {
+      return this.getNuggetHtml(foundParagraph);
+    } else {
+      return '';
+    }
   }
 
   //PUBLICATION DISPLAY CARD
@@ -270,11 +276,13 @@ export default class PublicationCardController {
     return card.content.type === 'documentView';
   }
 
-  getTextHtml(paragraph, index) {
+  getContentTextHtml(paragraph, index) {
     const mainTextReplaced = paragraph.value.description || "";
     if (paragraph.value.sidenote) {
+      const cardTitle = this.cardTitle.replace(/\s/g,'').toLowerCase();
+      const sideNoteId = "" + cardTitle + index;
       const sideNoteReplaced = paragraph.value.sidenote || "";
-      return '<label class="margin-toggle" for="' + this.cardTitle + index + '">&#8853;</label><input type="checkbox" id="' + this.cardTitle + index + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNoteReplaced) + '</span>' + this.marked(mainTextReplaced);
+      return '<label class="margin-toggle" for="' + sideNoteId + '">&#8853;</label><input type="checkbox" id="' + sideNoteId + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNoteReplaced) + '</span>' + this.marked(mainTextReplaced);
     } else {
       return this.marked(mainTextReplaced);
     }
