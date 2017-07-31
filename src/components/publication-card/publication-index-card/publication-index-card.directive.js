@@ -1,4 +1,4 @@
-export default class PublicationLandingContentCardDirective {
+export default class PublicationIndexCardDirective {
 
   constructor() {
     'ngInject';
