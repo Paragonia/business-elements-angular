@@ -1,45 +1,35 @@
-.pdf-viewer-container {
-  display: block;
+pdf-viewer {
   width: 100%;
-  pdf-viewer {
-    width: 100%;
-    max-width: 100%;
-    display: block;
-    background: #565354;
-  }
-  .pdf-toolbar {
-    font-size: 10px;
-    color: #fff;
-    padding: 3px 0;
-    > div {
-      text-align: center;
-      input {
-        width: 30px !important;
-        text-align: right;
-        border-width: 0;
-      }
-    }
-  }
-  .pdf-toolbar-hr {
-    margin: 0.5rem 0;
-    border: 0;
-    border-top: 1px solid #4e4b4c;
-    height: 1px;
-    width: 100%;
-  }
+  max-width: 100%;
+  display: block;
+  background: #565354;
+}
+.pdf-toolbar {
+  font-size: 10px;
+  color: #fff;
+  padding: 3px 0;
+}
+.pdf-toolbar > div {
+  text-align: center;
+}
+.pdf-toolbar > div input {
+  width: 30px !important;
+  text-align: right;
+  border-width: 0;
+}
+.pdf-toolbar-hr {
+  margin: 8px 0 !important;
+  border: 0;
+  border-top: 1px solid #4e4b4c !important;
+  height: 1px;
+  width: 100% !important;
+}
 
-  .canvas-container {
-    max-height: 100%;
-    width: 100%;
-    max-width: 100%;
-    overflow-y: scroll;
-  }
-
-  .transparent {
-    pdf-viewer-toolbar {
-      display: none;
-    }
-  }
+.canvas-container {
+  max-height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow-y: scroll;
 }
 
 .textLayer {
@@ -58,31 +48,26 @@
   position: absolute;
   white-space: pre;
   cursor: text;
-  -webkit-transform-origin: 0% 0%;
-  -moz-transform-origin: 0% 0%;
-  -o-transform-origin: 0% 0%;
-  -ms-transform-origin: 0% 0%;
-  transform-origin: 0% 0%;
+  transform-origin: 0 0;
 }
 
 .textLayer .highlight {
   margin: -1px;
   padding: 1px;
-
   background-color: rgb(180, 0, 170);
   border-radius: 4px;
 }
 
 .textLayer .highlight.begin {
-  border-radius: 4px 0px 0px 4px;
+  border-radius: 4px 0 0 4px;
 }
 
 .textLayer .highlight.end {
-  border-radius: 0px 4px 4px 0px;
+  border-radius: 0 4px 4px 0;
 }
 
 .textLayer .highlight.middle {
-  border-radius: 0px;
+  border-radius: 0;
 }
 
 .textLayer .highlight.selected {
@@ -95,28 +80,25 @@
 .textLayer .endOfContent {
   display: block;
   position: absolute;
-  left: 0px;
+  left: 0;
   top: 100%;
-  right: 0px;
-  bottom: 0px;
+  right: 0;
+  bottom: 0;
   z-index: -1;
   cursor: default;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  -moz-user-select: none;
 }
 
 .textLayer .endOfContent.active {
-  top: 0px;
+  top: 0;
 }
 
-.pdfViewer .canvasWrapper {
+pdf-viewer .canvasWrapper {
   overflow: hidden;
 }
 
-.pdfViewer .page {
+pdf-viewer .page {
   direction: ltr;
-  width: ~"calc(100% - 18px)";
+  width: calc(100% - 18px);
   height: 100%;
   overflow: visible;
   border: 9px solid transparent;
@@ -125,17 +107,15 @@
   background-color: white;
   position: relative;
   margin: 0;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-.pdfViewer.removePageBorders .page {
+pdf-viewer.removePageBorders .page {
   margin: 0 auto 10px auto;
   border: none;
 }
 
-.pdfViewer .page canvas {
+pdf-viewer .page canvas {
   margin: 0;
   display: block;
 }

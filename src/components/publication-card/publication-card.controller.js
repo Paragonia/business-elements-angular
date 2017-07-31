@@ -30,6 +30,9 @@ export default class PublicationCardController {
       this.$scope.card.content.img = this.getImgDownloadUri(this.$scope.card.content.img);
     }
 
+    // remove when patterns are sent correctly
+    this.patterns = [];
+
     /*
     ContentType usage:
      name -> header, paragraph-header, landing-page, card-title
@@ -77,7 +80,9 @@ export default class PublicationCardController {
     let img = '';
     const sideNote = paragraph.value.sidenote;
     if (sideNote) {
-      img =  '<figure><label class="margin-toggle" for="' + this.cardTitle + index + '">&#8853;</label><input type="checkbox" id="' + this.cardTitle + index + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNote) + '</span><img src="' + this.getImgDownloadUri(paragraph.value.href) + '" /></figure>';
+      let cardTitle = this.cardTitle.replace(/\s/g,'').toLowerCase();
+      let sideNoteId = "" + cardTitle + index;
+      img =  '<figure><label class="margin-toggle" for="' + sideNoteId + '">&#8853;</label><input type="checkbox" id="' + sideNoteId + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNote) + '</span><img src="' + this.getImgDownloadUri(paragraph.value.href) + '" /></figure>';
     } else {
       img = '<img src="' + this.getImgDownloadUri(paragraph.value.href) + '" />';
     }
@@ -274,11 +279,13 @@ export default class PublicationCardController {
     return card.content.type === 'documentView';
   }
 
-  getTextHtml(paragraph, index) {
+  getContentTextHtml(paragraph, index) {
     let mainTextReplaced = this.replacePatternLink(paragraph.value.description);
     if (paragraph.value.sidenote) {
+      let cardTitle = this.cardTitle.replace(/\s/g,'').toLowerCase();
+      let sideNoteId = "" + cardTitle + index;
       let sideNoteReplaced = this.replacePatternLink(paragraph.value.sidenote);
-      return '<label class="margin-toggle" for="' + this.cardTitle + index + '">&#8853;</label><input type="checkbox" id="' + this.cardTitle + index + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNoteReplaced) + '</span>' + this.marked(mainTextReplaced);
+      return '<label class="margin-toggle" for="' + sideNoteId + '">&#8853;</label><input type="checkbox" id="' + sideNoteId + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNoteReplaced) + '</span>' + this.marked(mainTextReplaced);
     } else {
       return this.marked(mainTextReplaced);
     }
