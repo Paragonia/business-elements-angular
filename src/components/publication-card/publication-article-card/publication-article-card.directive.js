@@ -6,17 +6,17 @@ export default class PublicationArticleCardDirective {
     return {
       restrict: 'E',
       template: '' +
-        '<div class="generic-display-card" ng-class="{\'fullscreen\': vm.fullscreenCard}">' +
+        '<div class="generic-display-card" ng-class="{\'fullscreen\': vm.fullScreenCard}">' +
           '<div class="generic-display-card_header">' +
             '<div layout>' +
-              '<md-button aria-label="{{\'ACTION.CLOSE\'| translate}}" class="generic-hit-area-button margin-left-4"' +
+              '<md-button aria-label="{{\'ACTION.CLOSE\'| translate}}" class="generic-hit-area-button generic-hit-area-button__40 margin-left-4"' +
                 'ng-click="vm.onCloseCard(card)" ng-show="vm.showCloseCardButton">' +
                 '<md-icon md-font-icon="icon-cancel"></md-icon>' +
               '</md-button>' +
-              '<md-button aria-label="{{\'ACTION.TOGGLE_FULLSCREEN\'| translate}}" class="generic-hit-area-button margin-right-4"' +
-                'ng-click="vm.toggleFullscreenCard()" ng-show="vm.showFullScreenButton">' +
-                '<md-icon md-font-icon="icon-fullscreen" ng-if="!vm.fullscreenCard"></md-icon>' +
-                '<md-icon md-font-icon="icon-fullscreen-exit" ng-if="vm.fullscreenCard"></md-icon>' +
+              '<md-button aria-label="{{\'ACTION.TOGGLE_FULLSCREEN\'| translate}}" class="generic-hit-area-button generic-hit-area-button__40 margin-right-4"' +
+                'ng-click="vm.toggleFullScreenCard(card)" ng-show="vm.showFullScreenButton">' +
+                '<md-icon md-font-icon="icon-fullscreen" ng-if="!vm.fullScreenCard"></md-icon>' +
+                '<md-icon md-font-icon="icon-fullscreen-exit" ng-if="vm.fullScreenCard"></md-icon>' +
               '</md-button>' +
               '<div class="generic-display-card_vertical-divider"></div>' +
               '<p class="generic-display-card_header-title margin-0 truncate" flex ng-bind="card.content.title"></p>' +
@@ -45,7 +45,7 @@ export default class PublicationArticleCardDirective {
             '</div>' +
           '</div>' +
           '<div class="generic-display-card_footer" layout>' +
-            '<md-button aria-label="Share" class="generic-full-area-button" ng-class="vm.showShareLinkHolder ? \'active\' : \'\'" ng-click="vm.onShare(card)" ng-show="vm.showSocialShareButton"><md-icon md-font-icon="icon-share"></md-icon></md-button>' +
+            '<md-button aria-label="Share" class="generic-full-area-button generic-full-area-button__48" ng-class="vm.showShareLinkHolder ? \'active\' : \'\'" ng-click="vm.onShare(card)" ng-show="vm.showSocialShareButton"><md-icon md-font-icon="icon-share"></md-icon></md-button>' +
             '<div class="generic-display-card_share" ng-if="vm.showShareLinkHolder">' +
               '<md-input-container class="md-block">' +
                 '<label translate>Link</label>' +
@@ -78,6 +78,7 @@ export default class PublicationArticleCardDirective {
         showFullScreenButton: '=?',
         onNavigationLinkClick: '&',
         onCloseCardClick: '&',
+        onFullScreenCardClick: '&',
         onDocumentLinkClick: '&',
         onPatternLinkClick: '&'
       }

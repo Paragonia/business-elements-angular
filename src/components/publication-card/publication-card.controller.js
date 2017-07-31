@@ -11,7 +11,7 @@ export default class PublicationCardController {
     this.stringUtil = stringUtil;
 
     this.displayPDFImage = true;
-    this.fullscreenCard = false;
+    this.fullScreenCard = false;
 
     /* copy link */
     this.sharableLink = "";
@@ -330,13 +330,17 @@ export default class PublicationCardController {
     this.linkCopied = true;
   }
 
-
   onCloseCard(card) {
     this.$scope.onCloseCardClick({card: card});
   }
 
-  toggleFullscreenCard() {
-    this.fullscreenCard = !this.fullscreenCard;
+  toggleFullScreenCard(card) {
+    this.fullScreenCard = !this.fullScreenCard;
+    this.onFullScreenCard(card);
+  }
+
+  onFullScreenCard(card) {
+    this.$scope.onFullScreenCardClick({card: card});
   }
 
   onClickDocumentLink(cardId, title, uri) {
