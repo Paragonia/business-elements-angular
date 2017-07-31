@@ -178,25 +178,25 @@ export default class PublicationCardController {
   //LANDINGPAGE CARD
   getFirstTitle(card) {
     if (card.content.title) {
-      return card.content.title;
+      return this.marked(card.content.title);
     } else {
-      const foundParagraph = card.content.paragraphs.find((paragraph) => this.containsParagraphHeader(paragraph));
-      return this.getParagraphHeader(foundParagraph);
+      const foundParagraph = card.content.paragraphs.find((paragraph) => this.containsParagraphText(paragraph));
+      return this.marked(this.getParagraphHeader(foundParagraph));
     }
   }
 
   getFirstDescription(card) {
     if (card.content.intro) {
-      return card.content.intro;
+      return this.marked(card.content.intro);
     } else {
       const foundParagraph = card.content.paragraphs.find((paragraph) => this.containsParagraphText(paragraph));
-      return this.getTextHtml(foundParagraph);
+      return this.marked(this.getTextHtml(foundParagraph));
     }
   }
 
   getFirstNugget(card) {
     const foundParagraph = card.content.paragraphs.find((paragraph) => this.containsNugget(paragraph));
-    return this.getNuggetHtml(foundParagraph);
+    return this.marked(this.getNuggetHtml(foundParagraph));
   }
 
   //PUBLICATION DISPLAY CARD
