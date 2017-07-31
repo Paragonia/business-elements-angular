@@ -181,7 +181,7 @@ export default class PublicationCardController {
       return this.marked(card.content.title);
     } else {
       const foundParagraph = card.content.paragraphs.find((paragraph) => this.containsParagraphText(paragraph));
-      return this.marked(this.getParagraphHeader(foundParagraph));
+      return this.getParagraphHeader(foundParagraph);
     }
   }
 
@@ -190,13 +190,17 @@ export default class PublicationCardController {
       return this.marked(card.content.intro);
     } else {
       const foundParagraph = card.content.paragraphs.find((paragraph) => this.containsParagraphText(paragraph));
-      return this.marked(this.getTextHtml(foundParagraph));
+      return this.getTextHtml(foundParagraph);
     }
   }
 
   getFirstNugget(card) {
     const foundParagraph = card.content.paragraphs.find((paragraph) => this.containsNugget(paragraph));
-    return this.marked(this.getNuggetHtml(foundParagraph));
+    if(foundParagraph) {
+      return this.getNuggetHtml(foundParagraph);
+    } else {
+      return '';
+    }
   }
 
   //PUBLICATION DISPLAY CARD

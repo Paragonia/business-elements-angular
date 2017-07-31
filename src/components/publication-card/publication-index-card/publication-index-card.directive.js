@@ -31,7 +31,7 @@ export default class PublicationIndexCardDirective {
             '</div> ' +
           '</div> ' +
           '<div class="index-card_content-action no-focus" ng-bind-html="vm.getFirstNugget(card)" ng-click="vm.onNavigateTo(card, \'nugget\')"></div> ' +
-          '<div class="generic-display-card_footer" ng-show="vm.showFooter"> ' +
+          '<div class="generic-display-card_footer"> ' +
             '<md-button aria-label="Share" class="generic-full-area-button generic-full-area-button__48" ng-class="vm.showShareLinkHolder ? \'active\' : \'\'" ' +
               'ng-click="vm.onShare(card)" ng-show="vm.showSocialShareButton"> ' +
               '<md-icon md-font-icon="icon-share"></md-icon> ' +
