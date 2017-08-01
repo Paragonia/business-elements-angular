@@ -9,19 +9,15 @@ export default class ParsingService {
   }
 
   parseContent(content) {
-    const parsedContent = new Map();
-
-    content.children.forEach((context) => {
-      const contextFrameName = context.element.content.data.value;
-      const contextFrameData = [];
-      context.children.forEach((contextFrame) => {
-        const frameData = this._getDataForFrame(contextFrame);
-        contextFrameData.push(frameData);
-      });
-      parsedContent.set(contextFrameName, contextFrameData);
-    });
-
-    return parsedContent;
+    return content.children.reduce((acc, context) => {
+      const frameName = context.element.content.data.value;
+      const frameData = context.children.reduce((childAcc, contextFrame) => {
+        childAcc.push(this.getFrameData(contextFrame));
+        return childAcc;
+      }, []);
+      acc.set(frameName, frameData);
+      return acc;
+    }, new Map());
   }
 
   getContentItems(sectionsArray, maxItems = null, itemCount = 0) {
@@ -43,7 +39,8 @@ export default class ParsingService {
       if (contentElement.item.type === "Content") {
         const sectionItem = {
           id: contentElement.item.data.contentId.data.valueCellId,
-          title: contentElement.item.data.title
+          title: contentElement.item.data.title,
+          url: contentElement.url
         };
         acc.push(sectionItem);
       }
@@ -57,32 +54,16 @@ export default class ParsingService {
     }));
   }
 
-  _getDataForFrame(contextFrame) {
+  getFrameData(contextFrame) {
     const preparedContentFrame = Defiant.getSnapshot(contextFrame);
 
-    const title = JSON.search(preparedContentFrame, '//*[attribute="story"]/value/title | //*[attribute="pattern"]/value/title | //*[attribute="name"]/value/name');
-    const type = JSON.search(preparedContentFrame, '//*[attribute="story"]/attribute | //*[attribute="pattern"]/attribute | //*[attribute="name"]/attribute');
-
-    let contentMaturity = '';
-    let contentIntro = '';
-    let contentChapter = '';
-    let contentImage = '';
-
-    if (JSON.search(preparedContentFrame, '//*[attribute="pattern"]').length > 0) {
-      contentMaturity = JSON.search(preparedContentFrame, '//*[attribute="pattern"]/value/maturity');
-      contentIntro = JSON.search(preparedContentFrame, '//*[attribute="pattern"]/value/pattern');
-    } else if (JSON.search(preparedContentFrame, '//*[attribute="story"]').length > 0) {
-      contentIntro = JSON.search(preparedContentFrame, '//*[attribute="story"]/value/story');
-      contentChapter = JSON.search(preparedContentFrame, '//*[attribute="story"]/value/title');
-    } else {
-      contentIntro = JSON.search(preparedContentFrame, '//*[attribute="name"]/value/name');
-    }
-
-    contentImage = JSON.search(preparedContentFrame, '//*[attribute="image"]/value/href');
+    let contentChapter, contentIntro, contentId, contentParagraphs = [];
     const paragraphs = [];
-    let contentParagraphs = '';
+    const title = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/value/title | //*[attribute="name"]/value/name)[1]'));
+    const type = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/attribute)[1]'));
+    const classification = this.getFirstArrayValue(contextFrame.element.classifications);
+    const contentMaturity = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="pattern"]/value/maturity)[1]'));
 
-    let contentId = '';
     if (contextFrame.element.id.data.valueCellId) {
       contentId = contextFrame.element.id.data.valueCellId;
       contentParagraphs = JSON.search(preparedContentFrame, '//*[contentType="Section"]/..');
@@ -91,17 +72,25 @@ export default class ParsingService {
       contentParagraphs = JSON.search(preparedContentFrame, '//*[contentType="Section"]/..')[0].children;
     }
 
-    contentParagraphs = contentParagraphs.filter((paragraph) => {
-      return paragraph.element.content.data.attribute !== "pattern" && paragraph.element.content.data.attribute !== "story";
-    });
+    const contentCandidate = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//element//*[attribute="pattern"]/../.. | //element//*[attribute="story"]/../.. | //element//*[attribute="force"]/../.. | //element//*[attribute="solution"]/../..)[1]'));
 
-    if (contentImage.length > 0) {
-      //filter first image already collected
+    if (contentCandidate) {
+      contentIntro = this.getFirstArrayValue(JSON.search(contentCandidate, '(//content//value/pattern | //content//value/story | //content//value/force | //content//value/solution)[1]'));
+      contentChapter = this.getFirstArrayValue(JSON.search(contentCandidate, '(//content//value/title)[1]'));
+      //filter out valueId (paragraph), its already collected in /content/intro & /content/chapter
+      contentParagraphs = contentParagraphs.filter((paragraph) => {
+        return (JSON.search(paragraph, '//*[valueId="' + contentCandidate.id.data.valueId + '"]')).length === 0;
+      });
+    }
+
+    const contentImage = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="image"]/value/href)[1]'));
+    if (contentImage && contentImage.length > 0) {
+      //filter first image already collected in /content/img
       contentParagraphs = contentParagraphs.filter((paragraph) => {
         if (paragraph.element.id.type === "ValueCell" && paragraph.children.length > 0) {
-          return paragraph.children[0].element.content.data.value.href !== contentImage[0];
+          return paragraph.children[0].element.content.data.value.href !== contentImage;
         } else if (paragraph.element.id.type === "Value") {
-          return paragraph.element.content.data.value.href !== contentImage[0];
+          return paragraph.element.content.data.value.href !== contentImage;
         } else {
           return true;
         }
@@ -114,9 +103,12 @@ export default class ParsingService {
         if (data.length > 1) {
           data[0].value.sidenote = data[1].value.description;
         }
-        paragraphs.push(data[0]);
+        if (data[0]) {
+          paragraphs.push(data[0]);
+        }
       });
     } else {
+      // no paragraphs found; add placeholder data.
       paragraphs.push({
         "attribute": "description",
         "value": {
@@ -127,33 +119,63 @@ export default class ParsingService {
 
     return {
       // TODO - store as card ID the entire serialized element.id field
-      id: contentId,
-      type: this._getValueOrDefault(type[0]),
-      description: this._getValueOrDefault(title[0]),
-      classification: this._getValueOrDefault(contextFrame.element.classifications[0]),
+      id: ParsingService.getValueOrDefault(contentId),
+      type: ParsingService.getValueOrDefault(type),
+      description: ParsingService.getValueOrDefault(title),
+      classification: ParsingService.getValueOrDefault(classification),
       content: {
-        maturity: contentMaturity[0],
-        title: this._getValueOrDefault(title[0], this._getValueOrDefault(title[0])),
-        intro: this._getValueOrDefault(contentIntro[0]),
-        chapter: this._getValueOrDefault(contentChapter[0]),
-        type: this._getValueOrDefault(type[0]),
-        img: this._getValueOrDefault(contentImage[0]),
+        maturity: ParsingService.getValueOrDefault(contentMaturity),
+        title: ParsingService.getValueOrDefault(title),
+        intro: ParsingService.getValueOrDefault(contentIntro),
+        chapter: ParsingService.getValueOrDefault(contentChapter),
+        type: ParsingService.getValueOrDefault(type),
+        img: ParsingService.getValueOrDefault(contentImage),
         paragraphs: paragraphs
       }
     };
   }
 
-  _getValueOrDefault(value, defaultValue) {
-    if (value) {
-      return value;
-    } else {
-      if (defaultValue) {
-        return defaultValue;
-      } else {
-        return "";
-      }
-    }
+  /**
+   * From the provided parsedContent, find all patterns in paragraph and in contentItems and store the contentId and title.
+   *
+   * @param parsedContent the content in which patterns are looked for.
+   * @constructUrlFn a function reference to construct an url using the content-title.
+   */
+  findPatterns(parsedContent) {
+    const valueType = "pattern";
+    const contentArrays = Array.from(parsedContent.values());
+
+    return contentArrays.reduce((contentAcc, contentArray) => {
+      return contentArray.reduce((valueAcc, value) => {
+        if (value.type === valueType) {
+          valueAcc.push({
+            contentId: value.id,
+            pattern: value.description
+          });
+        }
+
+        if (value.content && value.content.paragraphs && value.content.paragraphs.length > 0) {
+          value.content.paragraphs.reduce((paragraphAcc, paragraph) => {
+            if (paragraph.attribute === valueType) {
+              paragraphAcc.push({
+                contentId: value.id,
+                pattern: paragraph.value.title
+              });
+            }
+            return paragraphAcc;
+          }, valueAcc);
+        }
+        return valueAcc;
+      }, contentAcc);
+    }, []);
   }
 
+  static getValueOrDefault(value, defaultValue) {
+    return (value) || (defaultValue || "");
+  }
+
+  getFirstArrayValue(arrayValues) {
+    return angular.isArray(arrayValues) && arrayValues[0];
+  }
 
 }

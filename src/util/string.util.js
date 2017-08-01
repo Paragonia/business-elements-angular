@@ -46,4 +46,13 @@ export default class StringUtil {
 
   }
 
+  /**
+   * Convert the provided path to an URL-friendly path
+   * @param path the path to convert
+   * @returns {string} an URL friendly path
+   */
+  toUrlPath(path) {
+    return (path) ? path.replace(/[^a-zA-Z0-9-_ ]/g, "").replace(/\s/g, "-").replace(/-{2,}/g, "-").toLowerCase() : "";
+  }
+
 }

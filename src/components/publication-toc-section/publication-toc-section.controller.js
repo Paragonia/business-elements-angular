@@ -15,7 +15,7 @@ export default class PublicationTocSectionController {
     }
   }
 
-  displayItemById(itemId) {
-    this.$scope.onDisplayItemId({itemId: itemId});
+  displayItemById(itemId, itemUrl) {
+    this.$scope.onDisplayItemId({itemId: itemId, itemUrl: itemUrl});
   }
 }

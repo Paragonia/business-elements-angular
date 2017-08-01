@@ -25,7 +25,7 @@ export default class PublicationTocSectionDirective {
       '<md-list flex ng-if="section.children" ng-show="section.open"> ' +
       '<div ng-repeat="sectionChild in section.children"> ' +
       '<be-publication-toc-section section-level="sectionChild.level" ' +
-      'is-open="true" ' +
+      'is-open="sectionChild.open" ' +
       'section="sectionChild" ' +
       'on-display-item-id="sectionVm.displayItemById(itemId)" ' +
       'show-section-header="true"> ' +
@@ -33,7 +33,7 @@ export default class PublicationTocSectionDirective {
       '</div> ' +
       '</md-list> ' +
       '</div >',
-      controller: 'PublicationTocSectionController',
+      controller: 'BePublicationTocSectionController',
       controllerAs: 'sectionVm',
       scope: {
         onDisplayItemId: '&',

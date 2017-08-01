@@ -16,6 +16,7 @@ import BusinessElementsApiProvider from "./services/business-elements-api.provid
 import stringUtil from "./util/string.util";
 import resourceSrc from "./directives/resource-src.directive";
 import avatarSrc from "./directives/avatar-src.directive";
+import pattern from "./directives/pattern.directive";
 import transcludeReplace from "./directives/transclude-replace.directive";
 import validEmailaddress from "./directives/valid-emailaddress.directive";
 import validHandle from "./directives/valid-handle.directive";
@@ -25,6 +26,7 @@ import pdfViewerToolbar from "./directives/pdf-viewer/pdf-viewer-toolbar.directi
 import PdfViewerController from './directives/pdf-viewer/pdf-viewer.controller';
 import PdfViewerToolbarController from './directives/pdf-viewer/pdf-viewer-toolbar.controller';
 import PdfService from './directives/pdf-viewer/pdf.service';
+import beCompile from './directives/compile.directive';
 
 angular.module("businessElementsAngular", ['app.be-components'])
   .provider("businessElementsApi", new BusinessElementsApiProvider())
@@ -35,12 +37,14 @@ angular.module("businessElementsAngular", ['app.be-components'])
   })
   .controller('PdfViewerController', PdfViewerController)
   .controller('PdfViewerToolbarController', PdfViewerToolbarController)
+  .directive("pattern", pattern)
   .directive("resourceSrc", resourceSrc)
   .directive("avatarSrc", avatarSrc)
   .directive("ngTranscludeReplace", transcludeReplace)
   .directive("validEmailaddress", validEmailaddress)
   .directive("validHandle", validHandle)
   .directive("pdfViewer", pdfViewer)
+  .directive("beCompile", beCompile)
   .directive("pdfViewerToolbar", pdfViewerToolbar);
 
 module.exports = "businessElementsAngular";

@@ -65,4 +65,20 @@ describe("stringUtil", () => {
     });
 
   });
+
+  describe("#toUrlPath", () => {
+    it("should convert nothing when its empty", () => {
+      stringUtil.toUrlPath("").should.equal("");
+    });
+    it("should convert url-path to lowercase", () => {
+      stringUtil.toUrlPath("ABCdefGHI13344334587").should.equal("abcdefghi13344334587");
+    });
+    it("should convert whitespace to dash", () => {
+      stringUtil.toUrlPath("  test 123  test 567 ").should.equal("-test-123-test-567-");
+    });
+    it("should strip exotic characters", () => {
+      stringUtil.toUrlPath("test  123 ±±!@#$%^&*()))__+=-1234567890-=abcdefghijklmnopqrstuvwyz").should.equal("test-123-__-1234567890-abcdefghijklmnopqrstuvwyz");
+    });
+
+  });
 });
