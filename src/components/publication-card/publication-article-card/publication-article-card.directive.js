@@ -33,7 +33,7 @@ export default class PublicationArticleCardDirective {
             '<div class="article-card_content-container" ng-class="{\'no-action-call\': !vm.hasNugget}">' +
               '<div ng-repeat="(index, paragraph) in card.content.paragraphs">' +
                 '<div ng-if="vm.containsParagraphText(paragraph)">' +
-                  '<div class="article-card_content-details" bind-html-compile="vm.getTextHtml(paragraph)"></div>' +
+                  '<div class="article-card_content-details" be-compile="vm.getTextHtml(paragraph)"></div>' +
                 '</div>' +
                 '<div ng-if="vm.containsParagraphImage(paragraph)">' +
                   '<div class="article-card_content-details" ng-bind-html="vm.getImgHtml(paragraph)"></div>' +

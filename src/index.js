@@ -26,6 +26,7 @@ import pdfViewerToolbar from "./directives/pdf-viewer/pdf-viewer-toolbar.directi
 import PdfViewerController from './directives/pdf-viewer/pdf-viewer.controller';
 import PdfViewerToolbarController from './directives/pdf-viewer/pdf-viewer-toolbar.controller';
 import PdfService from './directives/pdf-viewer/pdf.service';
+import beCompile from './directives/compile.directive';
 
 angular.module("businessElementsAngular", ['app.be-components'])
   .provider("businessElementsApi", new BusinessElementsApiProvider())
@@ -43,6 +44,7 @@ angular.module("businessElementsAngular", ['app.be-components'])
   .directive("validEmailaddress", validEmailaddress)
   .directive("validHandle", validHandle)
   .directive("pdfViewer", pdfViewer)
+  .directive("beCompile", beCompile)
   .directive("pdfViewerToolbar", pdfViewerToolbar);
 
 module.exports = "businessElementsAngular";

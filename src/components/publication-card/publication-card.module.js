@@ -3,7 +3,7 @@ import PublicationArticleCardDirective from './publication-article-card/publicat
 import PublicationIndexCardDirective from './publication-index-card/publication-index-card.directive';
 import PublicationPreviewCardDirective from './publication-preview-card/publication-preview-card.directive';
 import PublicationCardController from './publication-card.controller';
-import beCompile from '../../directives/be-compile.directive';
+
 
 export default function () {
   angular.module('app.be-components.publication-card', [])
@@ -11,6 +11,5 @@ export default function () {
     .directive('bePublicationPreviewCard', () => new PublicationPreviewCardDirective())
     .directive('bePublicationContentCard', () => new PublicationContentCardDirective())
     .directive('bePublicationArticleCard', () => new PublicationArticleCardDirective())
-    .directive('bePublicationIndexCard', () => new PublicationIndexCardDirective())
-    .directive("beCompile", beCompile);
+    .directive('bePublicationIndexCard', () => new PublicationIndexCardDirective());
 }

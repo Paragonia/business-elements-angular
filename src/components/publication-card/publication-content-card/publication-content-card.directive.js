@@ -35,7 +35,7 @@ export default class PublicationContentCardDirective {
               '<p class="content-card_content-type" ng-bind="vm.getCardType(card)"></p> ' +
               '<h1>{{card.content.title}}</h1> ' +
               '<p ng-if="card.content.maturity" class="content-card_content-maturity"> ' +
-                '<img ng-repeat="i in vm.getMaturity(card) track by $index" src="assets/images/maturity-1-s.svg"/> ' +
+                '<img ng-repeat="i in vm.getMaturity(card) track by $index" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE2LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHdpZHRoPSIxMC4zMDdweCIgaGVpZ2h0PSIxMS44OTlweCIgdmlld0JveD0iNy44NDcgMC41NSAxMC4zMDcgMTEuODk5IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDcuODQ3IDAuNTUgMTAuMzA3IDExLjg5OSIKCSB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHBvbHlnb24gZmlsbD0iIzMzMzMzMyIgcG9pbnRzPSI3Ljg0NywzLjUyNCA3Ljg0Nyw5LjQ3NyAxMywxMi40NDkgMTguMTUzLDkuNDc3IDE4LjE1MywzLjUyNCAxMywwLjU1ICIvPgo8L3N2Zz4K"/> ' +
               '</p> ' +
               '<hr/> ' +
               '<div ng-if="card.content.intro && card.cardLayout !== \'responsive\'" class="content-card_content-intro" ng-bind-html="vm.getMarkedContent(card.content.intro)"></div> ' +
