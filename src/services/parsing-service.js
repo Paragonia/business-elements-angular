@@ -143,27 +143,30 @@ export default class ParsingService {
    */
   findPatterns(parsedContent) {
     const valueType = "pattern";
-    const contentArray = Array.from(parsedContent.values());
-    return contentArray[0].reduce((acc, value) => {
-      if (value.type === valueType) {
-        acc.push({
-          contentId: value.id,
-          pattern: value.description
-        });
-      }
+    const contentArrays = Array.from(parsedContent.values());
 
-      if (value.content && value.content.paragraphs && value.content.paragraphs.length > 0) {
-        value.content.paragraphs.reduce((parAcc, par) => {
-          if (par.attribute === valueType) {
-            parAcc.push({
-              contentId: value.id,
-              pattern: par.value.title
-            });
-          }
-          return parAcc;
-        }, acc);
-      }
-      return acc;
+    return contentArrays.reduce((contentAcc, contentArray) => {
+      return contentArray.reduce((valueAcc, value) => {
+        if (value.type === valueType) {
+          valueAcc.push({
+            contentId: value.id,
+            pattern: value.description
+          });
+        }
+
+        if (value.content && value.content.paragraphs && value.content.paragraphs.length > 0) {
+          value.content.paragraphs.reduce((paragraphAcc, paragraph) => {
+            if (paragraph.attribute === valueType) {
+              paragraphAcc.push({
+                contentId: value.id,
+                pattern: paragraph.value.title
+              });
+            }
+            return paragraphAcc;
+          }, valueAcc);
+        }
+        return valueAcc;
+      }, contentAcc);
     }, []);
   }
 
