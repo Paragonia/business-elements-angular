@@ -6,7 +6,7 @@ export default class PublicationContentCardDirective {
     return {
       restrict: 'E',
       template: '' +
-        '<div class="generic-display-card" ng-class="{\'fullscreen\': vm.fullScreenCard}">' +
+        '<div class="generic-display-card">' +
           '<div class="generic-display-card_header content-card_header">' +
             '<div layout> ' +
               '<md-button aria-label="{{\'ACTION.CLOSE\'| translate}}" class="generic-hit-area-button generic-hit-area-button__40 margin-left-4"' +
@@ -14,9 +14,9 @@ export default class PublicationContentCardDirective {
                 '<md-icon md-font-icon="icon-cancel"></md-icon>' +
               '</md-button>' +
               '<md-button aria-label="{{\'ACTION.TOGGLE_FULLSCREEN\'| translate}}" class="generic-hit-area-button generic-hit-area-button__40 margin-right-4"' +
-                'ng-click="vm.toggleFullScreenCard(card)" ng-show="vm.showFullScreenButton">' +
-                '<md-icon md-font-icon="icon-fullscreen" ng-if="!vm.fullScreenCard"></md-icon>' +
-                '<md-icon md-font-icon="icon-fullscreen-exit" ng-if="vm.fullScreenCard"></md-icon>' +
+                'ng-click="vm.onFullScreenCard(card)" ng-show="vm.showFullScreenButton">' +
+                '<md-icon md-font-icon="icon-fullscreen" ng-if="!vm.showExitFullScreenButton"></md-icon>' +
+                '<md-icon md-font-icon="icon-fullscreen-exit" ng-if="vm.showExitFullScreenButton"></md-icon>' +
               '</md-button>' +
               '<div class="generic-display-card_vertical-divider"></div>' +
               '<p class="generic-display-card_header-title margin-0 truncate" flex ng-bind="card.content.title"></p> ' +
@@ -71,6 +71,7 @@ export default class PublicationContentCardDirective {
         card: '=',
         showCloseCardButton: '=?',
         showFullScreenButton: '=?',
+        showExitFullScreenButton: '=?',
         onNavigationLinkClick: '&',
         onCloseCardClick: '&',
         onFullScreenCardClick: '&',

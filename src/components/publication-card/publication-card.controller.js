@@ -11,7 +11,6 @@ export default class PublicationCardController {
     this.stringUtil = stringUtil;
 
     this.displayPDFImage = true;
-    this.fullScreenCard = false;
 
     /* copy link */
     this.sharableLink = "";
@@ -22,6 +21,7 @@ export default class PublicationCardController {
     this.showSocialShareButton = this.$scope.showSocialShareButton || false;
     this.showCloseCardButton = this.$scope.showCloseCardButton || false;
     this.showFullScreenButton = this.$scope.showFullScreenButton || false;
+    this.showExitFullScreenButton = this.$scope.showExitFullScreenButton || false;
     this.hasNugget = false;
 
     this.cardTitle = this.$scope.card.content.title;
@@ -310,11 +310,6 @@ export default class PublicationCardController {
 
   onCloseCard(card) {
     this.$scope.onCloseCardClick({card: card});
-  }
-
-  toggleFullScreenCard(card) {
-    this.fullScreenCard = !this.fullScreenCard;
-    this.onFullScreenCard(card);
   }
 
   onFullScreenCard(card) {
