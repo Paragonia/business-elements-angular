@@ -320,8 +320,8 @@ export default class PublicationCardController {
     this.$scope.onDocumentLinkClick({cardId: cardId, title: title, uri: uri});
   }
 
-  onClickPatternLink(cardId, pattern) {
-    this.$scope.onPatternLinkClick({cardId: cardId, pattern: pattern});
+  onClickPatternLink(cardId) {
+    this.$scope.onPatternLinkClick({cardId: cardId});
   }
 }
 

@@ -29,7 +29,7 @@ export default function PatternDirective() {
       const patterns = findScopeReference(scope, "patterns");
       let foundPattern;
       if (patterns) {
-        foundPattern = patterns.find((pattern) => pattern.pattern === patternName);
+        foundPattern = patterns.find((aPattern) => aPattern.pattern === patternName);
       }
 
       /**
@@ -40,7 +40,7 @@ export default function PatternDirective() {
         if (foundPattern) {
           const clickMethod = findScopeReference(scope, "onPatternLinkClick");
           if (clickMethod) {
-            clickMethod({card: foundPattern});
+            clickMethod({cardId: foundPattern.contentId});
           }
         }
       };
