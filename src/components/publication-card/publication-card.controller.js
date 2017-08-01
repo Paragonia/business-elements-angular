@@ -77,8 +77,8 @@ export default class PublicationCardController {
     let img = '';
     const sideNote = paragraph.value.sidenote;
     if (sideNote) {
-      let cardTitle = this.cardTitle.replace(/\s/g,'').toLowerCase();
-      let sideNoteId = "" + cardTitle + index;
+      const cardTitle = this.cardTitle.replace(/\s/g,'').toLowerCase();
+      const sideNoteId = "" + cardTitle + index;
       img =  '<figure><label class="margin-toggle" for="' + sideNoteId + '">&#8853;</label><input type="checkbox" id="' + sideNoteId + '" class="margin-toggle" /><span class="marginnote">' + this.marked(sideNote) + '</span><img src="' + this.getImgDownloadUri(paragraph.value.href) + '" /></figure>';
     } else {
       img = '<img src="' + this.getImgDownloadUri(paragraph.value.href) + '" />';

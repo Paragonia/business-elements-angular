@@ -11,8 +11,8 @@ export default function PatternDirective() {
        * @param aScope the scope on which the variable is looked for.
        * @param scopeVariableName the variable name
        */
-      let findScopeReference = (aScope, scopeVariableName) => {
-        let variable = aScope[scopeVariableName];
+      const findScopeReference = (aScope, scopeVariableName) => {
+        const variable = aScope[scopeVariableName];
         if (variable) {
           return variable;
         } else {
@@ -46,6 +46,6 @@ export default function PatternDirective() {
       };
 
     }
-  }
-};
+  };
+}
 
