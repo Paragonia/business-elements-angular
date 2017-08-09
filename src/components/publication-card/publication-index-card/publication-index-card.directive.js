@@ -62,7 +62,9 @@ export default class PublicationIndexCardDirective {
         showSocialShareButton: '=?',
         showCloseCardButton: '=?',
         showFullScreenButton: '=?',
+        showExitFullScreenButton: '=?',
         onNavigationLinkClick: '&',
+        onFullScreenCardClick: '&',
         onCloseCardClick: '&'
       }
     };
