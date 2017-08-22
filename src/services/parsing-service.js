@@ -57,7 +57,7 @@ export default class ParsingService {
   getFrameData(contextFrame) {
     const preparedContentFrame = Defiant.getSnapshot(contextFrame);
 
-    let contentChapter, contentIntro, contentId, contentParagraphs = [];
+    let contentChapter, contentIntro, contentId, contentIdObject, contentParagraphs = [];
     const paragraphs = [];
     const title = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/value/title | //*[attribute="name"]/value/name)[1]'));
     const type = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/attribute)[1]'));
@@ -71,6 +71,7 @@ export default class ParsingService {
       contentId = contextFrame.element.id.data.instanceCellId;
       contentParagraphs = JSON.search(preparedContentFrame, '//*[contentType="Section"]/..')[0].children;
     }
+    contentIdObject = contextFrame.element.id;
 
     const contentCandidate = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//element//*[attribute="pattern"]/../.. | //element//*[attribute="story"]/../.. | //element//*[attribute="force"]/../.. | //element//*[attribute="solution"]/../..)[1]'));
 
@@ -120,6 +121,7 @@ export default class ParsingService {
     return {
       // TODO - store as card ID the entire serialized element.id field
       id: ParsingService.getValueOrDefault(contentId),
+      contentId: ParsingService.getValueOrDefault(contentIdObject),
       type: ParsingService.getValueOrDefault(type),
       description: ParsingService.getValueOrDefault(title),
       classification: ParsingService.getValueOrDefault(classification),
