@@ -109,15 +109,7 @@ export default class ParsingService {
           paragraphs.push(data[0]);
         }
       });
-    } else {
-      // no paragraphs found; add placeholder data.
-      paragraphs.push({
-        "attribute": "description",
-        "value": {
-          "description": "*Content coming soon...*"
-        }
-      });
-    }
+    } 
 
     return {
       // TODO - store as card ID the entire serialized element.id field
