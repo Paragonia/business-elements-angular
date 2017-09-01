@@ -59,10 +59,10 @@ export default class ParsingService {
 
     let contentChapter, contentIntro, contentId, contentParagraphs = [];
     const paragraphs = [];
-    const title = ParsingService.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/value/title | //*[attribute="name"]/value/name)[1]'));
-    const type = ParsingService.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/attribute)[1]'));
-    const classification = ParsingService.getFirstArrayValue(contextFrame.element.classifications);
-    const contentMaturity = ParsingService.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="pattern"]/value/maturity)[1]'));
+    const title = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/value/title | //*[attribute="name"]/value/name)[1]'));
+    const type = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute]/attribute)[1]'));
+    const classification = this.getFirstArrayValue(contextFrame.element.classifications);
+    const contentMaturity = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="pattern"]/value/maturity)[1]'));
 
     if (contextFrame.element.id.data.valueCellId) {
       contentId = contextFrame.element.id.data.valueCellId;
@@ -74,18 +74,18 @@ export default class ParsingService {
 
     const contentIdObject = contextFrame.element.id;
     const contentPurpose = contextFrame.element.tags[0];
-    const contentCandidate = ParsingService.getFirstArrayValue(JSON.search(preparedContentFrame, '(//element//*[attribute="pattern"]/../.. | //element//*[attribute="story"]/../.. | //element//*[attribute="force"]/../.. | //element//*[attribute="solution"]/../..)[1]'));
+    const contentCandidate = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//element//*[attribute="pattern"]/../.. | //element//*[attribute="story"]/../.. | //element//*[attribute="force"]/../.. | //element//*[attribute="solution"]/../..)[1]'));
 
     if (contentCandidate) {
-      contentIntro = ParsingService.getFirstArrayValue(JSON.search(contentCandidate, '(//content//value/pattern | //content//value/story | //content//value/force | //content//value/solution)[1]'));
-      contentChapter = ParsingService.getFirstArrayValue(JSON.search(contentCandidate, '(//content//value/title)[1]'));
+      contentIntro = this.getFirstArrayValue(JSON.search(contentCandidate, '(//content//value/pattern | //content//value/story | //content//value/force | //content//value/solution)[1]'));
+      contentChapter = this.getFirstArrayValue(JSON.search(contentCandidate, '(//content//value/title)[1]'));
       //filter out valueId (paragraph), its already collected in /content/intro & /content/chapter
       contentParagraphs = contentParagraphs.filter((paragraph) => {
         return (JSON.search(paragraph, '//*[valueId="' + contentCandidate.id.data.valueId + '"]')).length === 0;
       });
     }
 
-    const contentImage = ParsingService.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="image"]/value/href)[1]'));
+    const contentImage = this.getFirstArrayValue(JSON.search(preparedContentFrame, '(//*[attribute="image"]/value/href)[1]'));
     if (contentImage && contentImage.length > 0) {
       //filter first image already collected in /content/img
       contentParagraphs = contentParagraphs.filter((paragraph) => {
@@ -170,7 +170,7 @@ export default class ParsingService {
     return (value) || (defaultValue || "");
   }
 
-  static getFirstArrayValue(arrayValues) {
+  getFirstArrayValue(arrayValues) {
     return angular.isArray(arrayValues) && arrayValues[0];
   }
 
