@@ -81,4 +81,13 @@ describe("stringUtil", () => {
     });
 
   });
+
+  describe("#toValidAttributePath", () => {
+    it("should convert nothing when its valid", () => {
+      stringUtil.toValidAttributePath("/abc").should.equal("/abc");
+    });
+    it("should prefix it with slash", () => {
+      stringUtil.toValidAttributePath("abc").should.equal("/abc");
+    });
+  });
 });
