@@ -28,6 +28,21 @@ export default class StringUtil {
   }
 
   /**
+   * Convert provided attributePath into a correct path.
+   * @param attributePath the path of an attribute
+   * @returns {*} a correctly formatted path
+   */
+  toValidAttributePath(attributePath) {
+    const slash = "/";
+    let validPath = null;
+    if (attributePath) {
+      validPath = !attributePath.startsWith(slash) ? slash + attributePath : attributePath;
+      validPath = validPath.toLowerCase();
+    }
+    return validPath;
+  }
+
+  /**
    * Validate the format of provided email parameter.
    * @param email the emailaddress to check
    * @returns {*|boolean} true, when email is valid.
