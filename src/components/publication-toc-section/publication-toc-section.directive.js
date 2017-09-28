@@ -13,7 +13,7 @@ export default class PublicationTocSectionDirective {
           'ng-if="showSectionHeader" layout layout-align="start center">' +
           '<md-icon ng-click="sectionVm.toggleSection(section)" md-font-icon="icon-caret-down" ng-if="section.open" class="no-focus"></md-icon>' +
           '<md-icon ng-click="sectionVm.toggleSection(section)" md-font-icon="icon-caret-right" ng-if="!section.open" class="no-focus"></md-icon>' +
-          '<p class="menu-item-label truncate no-focus" ng-click="sectionVm.openSectionCards(section)">{{ section.classification }}</p>' +
+          '<p class="menu-item-label truncate no-focus" ng-click="sectionVm.openSectionCards(section.items)">{{ section.classification }}</p>' +
         '</div>' +
         '<div class="menu-item" ' +
           'ng-show="section.open" ' +
@@ -25,7 +25,7 @@ export default class PublicationTocSectionDirective {
             '<be-publication-toc-section section-level="sectionChild.level" ' +
               'is-open="sectionChild.open" ' +
               'section="sectionChild" ' +
-              'on-display-section-items="sectionVm.openSectionCards(sectionChild)" ' +
+              'on-display-section-items="sectionVm.openSectionCards(items)" ' +
               'on-display-item-id="sectionVm.displayItemById(itemId)" ' +
               'show-section-header="true">' +
             '</be-publication-toc-section>' +

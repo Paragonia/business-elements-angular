@@ -34,11 +34,11 @@ export default class PublicationTocController {
     });
   }
 
-  openSectionCards(section) {
-    section.items.forEach(item => {
+  openSectionCards(items) {
+    items.forEach(item => {
       item.selected = true;
     });
-    this.$scope.onDisplaySectionItems({section: section});
+    this.$scope.onDisplaySectionItems({items: items});
   }
 
   setSectionOpenBasedOnSelectedItem(sectionsArray, itemId) {

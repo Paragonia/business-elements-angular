@@ -12,7 +12,7 @@ export default class PublicationTocDirective {
             '<be-publication-toc-section section-level="section.level" ' +
               'is-open="section.open" ' +
               'section="section" ' +
-              'on-display-section-items="vm.openSectionCards(section)" ' +
+              'on-display-section-items="vm.openSectionCards(items)" ' +
               'on-display-item-id="vm.displayItemById(itemId, itemUrl)" ' +
               'show-section-header="!vm.isSingleRootSection()">' +
             '</be-publication-toc-section>' +
