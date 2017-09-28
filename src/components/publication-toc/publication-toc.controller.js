@@ -18,8 +18,6 @@ export default class PublicationTocController {
 
   displayItemById(itemId, itemUrl) {
     this.setSectionOpenBasedOnSelectedItem(this.sections, itemId);
-
-    console.log("was is das =? ", this.setSectionOpenBasedOnSelectedItem(this.sections, itemId));
     this.$scope.onDisplayItemId({itemId: itemId, itemUrl: itemUrl});
   }
 
