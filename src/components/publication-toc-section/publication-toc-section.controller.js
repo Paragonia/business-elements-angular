@@ -21,7 +21,7 @@ export default class PublicationTocSectionController {
       if(items) {
         this.$scope.onDisplaySectionItems({items: items});
       } else if (this.$scope.section.children.items) {
-        let items = this.$scope.section.children.items;
+        const items = this.$scope.section.children.items;
         this.$scope.onDisplaySectionItems({items: items});
       }
     }
