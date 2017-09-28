@@ -7,35 +7,35 @@ export default class PublicationTocSectionDirective {
       restrict: 'E',
       replace: true,
       template: '' +
-      '<div flex ng-class="sectionClass"> ' +
-      '<md-list-item ' +
-      'class="menu-title truncate no-focus" ' +
-      'ng-if="showSectionHeader" ' +
-      'ng-click="sectionVm.toggleSection(section)"> ' +
-      '<md-icon md-font-icon="icon-caret-down" ng-if="section.open"></md-icon> ' +
-      '<md-icon md-font-icon="icon-caret-right" ng-if="!section.open"></md-icon> ' +
-      '<span>{{ section.classification }}</span> ' +
-      '</md-list-item> ' +
-      '<md-list-item class="menu-item" ' +
-      'ng-show="section.open" ' +
-      'ng-click="sectionVm.displayItemById(item.id)" ' +
-      'ng-repeat-end ng-repeat="item in section.items"> ' +
-      '<span>{{item.title}}</span> ' +
-      '</md-list-item> ' +
-      '<md-list flex ng-if="section.children" ng-show="section.open"> ' +
-      '<div ng-repeat="sectionChild in section.children"> ' +
-      '<be-publication-toc-section section-level="sectionChild.level" ' +
-      'is-open="sectionChild.open" ' +
-      'section="sectionChild" ' +
-      'on-display-item-id="sectionVm.displayItemById(itemId)" ' +
-      'show-section-header="true"> ' +
-      '</be-publication-toc-section> ' +
-      '</div> ' +
-      '</md-list> ' +
+      '<div flex ng-class="sectionClass">' +
+        '<div ' +
+          'class="menu-title menu-item" ' +
+          'ng-if="showSectionHeader" layout layout-align="start center">' +
+          '<md-icon ng-click="sectionVm.toggleSection(section)" md-font-icon="icon-caret-down" ng-if="section.open" class="no-focus"></md-icon>' +
+          '<md-icon ng-click="sectionVm.toggleSection(section)" md-font-icon="icon-caret-right" ng-if="!section.open" class="no-focus"></md-icon>' +
+          '<p class="menu-item-label truncate no-focus" ng-click="sectionVm.openSectionCards(section)">{{ section.classification }}</p>' +
+        '</div>' +
+        '<div class="menu-item" ' +
+          'ng-show="section.open" ' +
+          'ng-repeat-end ng-repeat="item in section.items" ng-class="{\'selected-menu-item\':item.selected}"> ' +
+          '<p class="menu-item-label truncate no-focus" ng-click="sectionVm.displayItemById(item.id)">{{item.title}}</p>' +
+        '</div>' +
+        '<div flex class="be-toc__section-children" ng-if="section.children" ng-show="section.open">' +
+          '<div ng-repeat="sectionChild in section.children">' +
+            '<be-publication-toc-section section-level="sectionChild.level" ' +
+              'is-open="sectionChild.open" ' +
+              'section="sectionChild" ' +
+              'on-display-section-items="sectionVm.openSectionCards(sectionChild)" ' +
+              'on-display-item-id="sectionVm.displayItemById(itemId)" ' +
+              'show-section-header="true">' +
+            '</be-publication-toc-section>' +
+          '</div>' +
+        '</div>' +
       '</div >',
       controller: 'BePublicationTocSectionController',
       controllerAs: 'sectionVm',
       scope: {
+        onDisplaySectionItems: '&',
         onDisplayItemId: '&',
         section: '=',
         sectionLevel: '=',

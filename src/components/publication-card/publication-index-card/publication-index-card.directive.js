@@ -14,7 +14,7 @@ export default class PublicationIndexCardDirective {
                 '<md-icon md-font-icon="icon-cancel"></md-icon> ' +
               '</md-button> ' +
               '<md-button aria-label="{{\'ACTION.TOGGLE_FULLSCREEN\'| translate}}" class="generic-hit-area-button generic-hit-area-button__40 margin-right-4" ' +
-                'ng-click="vm.onFullScreenCard()" ng-show="vm.showFullScreenButton"> ' +
+                'ng-click="vm.onFullScreenCard(card)" ng-show="vm.showFullScreenButton"> ' +
                 '<md-icon md-font-icon="icon-fullscreen" ng-if="!vm.showExitFullScreenButton"></md-icon> ' +
                 '<md-icon md-font-icon="icon-fullscreen-exit" ng-if="vm.showExitFullScreenButton"></md-icon> ' +
               '</md-button> ' +

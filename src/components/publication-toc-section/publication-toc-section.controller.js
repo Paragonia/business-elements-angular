@@ -15,6 +15,13 @@ export default class PublicationTocSectionController {
     }
   }
 
+  openSectionCards(section) {
+    if (section.children && angular.isArray(section.children)) {
+      section.open = true;
+      this.$scope.onDisplaySectionItems({section: section});
+    }
+  }
+
   displayItemById(itemId, itemUrl) {
     this.$scope.onDisplayItemId({itemId: itemId, itemUrl: itemUrl});
   }
