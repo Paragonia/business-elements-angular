@@ -10,12 +10,35 @@ export default class PublicationTocController {
         this.oldToc = this.$scope.toc;
         this.sections = this.createSections(this.$scope.toc);
       }
+      if(this.$scope.closedItemId) {
+        this.closeItemById(this.sections, this.$scope.closedItemId);
+      }
     };
   }
 
   displayItemById(itemId, itemUrl) {
     this.setSectionOpenBasedOnSelectedItem(this.sections, itemId);
     this.$scope.onDisplayItemId({itemId: itemId, itemUrl: itemUrl});
+  }
+
+  closeItemById(sectionsArray, itemId) {
+    sectionsArray.forEach(section => {
+      section.items.find(item => {
+        if(item.id === itemId && item.selected) {
+          item.selected = false;
+        }
+      });
+      if(section.children) {
+        this.closeItemById(section.children, itemId);
+      }
+    });
+  }
+
+  openSectionCards(items) {
+    items.forEach(item => {
+      item.selected = true;
+    });
+    this.$scope.onDisplaySectionItems({items: items});
   }
 
   setSectionOpenBasedOnSelectedItem(sectionsArray, itemId) {
@@ -25,7 +48,9 @@ export default class PublicationTocController {
     return sectionsArray.reduce((acc, sectionElement) => {
       const doesChildItemMatchesSelectedItemId = angular.isDefined(sectionElement.items.find((item) => {
         const foundItem = item.id === itemId;
-        item.selected = foundItem;
+        if(foundItem) {
+          item.selected = foundItem;
+        }
         return foundItem;
       }));
       if (!doesChildItemMatchesSelectedItemId) {

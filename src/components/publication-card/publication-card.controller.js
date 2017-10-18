@@ -296,9 +296,10 @@ export default class PublicationCardController {
   onShare(card) {
     this.linkCopied = false;
     const cardTitle = card.url;
-    const exhibitionTitle = this.stringUtil.toUrlPath(card.selectedMenu);
+    const exhibitionTitle = this.stringUtil.toUrlPath(card.publication);
     const absoluteUrl = this.$location.absUrl();
-    this.sharableLink = absoluteUrl.substr(0, absoluteUrl.indexOf("#")) + "share/" + exhibitionTitle + "/" + cardTitle;
+    this.sharableLink = absoluteUrl.substr(0, absoluteUrl.indexOf("#")) + "share?" + exhibitionTitle + "&" + cardTitle;
+
 
     this.showRequestTouchHolder = false;
     this.showShareLinkHolder = !this.showShareLinkHolder;

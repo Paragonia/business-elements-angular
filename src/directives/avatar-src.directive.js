@@ -25,19 +25,22 @@ function avatarSrc(md5, api) {
           return api.getDownloadUri(resourceUri, "avatar");
         }
 
-        const addressee = item.split("@").find((element) => element.length > 0);
+        const addressee = item.split("@").find((element) => element && element.length > 0);
 
         let text;
-        if (addressee.length <= 3) {
-          text = addressee;
-        } else {
-          let initials = addressee
-            .split(new RegExp(" |\\.", "g"))
-            .filter((element) => element.length > 0)
-            .map((element) => element.charAt(0).toUpperCase());
 
-          initials = initials.slice(0, 3);
-          text = initials.join("");
+        if (addressee) {
+          if (addressee.length <= 3) {
+            text = addressee;
+          } else {
+            let initials = addressee
+              .split(new RegExp(" |\\.", "g"))
+              .filter((element) => element && element.length > 0)
+              .map((element) => element && element.charAt(0).toUpperCase());
+
+            initials = initials.slice(0, 3);
+            text = initials.join("");
+          }
         }
 
         if (!color) {
