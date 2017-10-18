@@ -7,7 +7,7 @@ export default class PublicationTocSectionDirective {
       restrict: 'E',
       replace: true,
       template: '' +
-      '<div flex ng-class="sectionClass">' +
+      '<div flex ng-class="{\'section-with-header\':showSectionHeader}" class="{{sectionClass}}">' +
         '<div ' +
           'class="menu-title menu-item" ' +
           'ng-if="showSectionHeader" layout layout-align="start center">' +
