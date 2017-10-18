@@ -9,12 +9,10 @@ export default class PublicationArticleCardDirective {
         '<div class="generic-display-card">' +
           '<div class="generic-display-card_header">' +
             '<div layout>' +
-              '<md-button aria-label="{{\'ACTION.CLOSE\'| translate}}" class="generic-hit-area-button generic-hit-area-button__40 margin-left-4"' +
-                'ng-click="vm.onCloseCard(card)" ng-show="vm.showCloseCardButton">' +
+              '<md-button aria-label="{{\'ACTION.CLOSE\'| translate}}" class="generic-hit-area-button generic-hit-area-button__40 margin-left-4" ng-click="vm.onCloseCard(card)" ng-show="vm.showCloseCardButton">' +
                 '<md-icon md-font-icon="icon-cancel"></md-icon>' +
               '</md-button>' +
-              '<md-button aria-label="{{\'ACTION.TOGGLE_FULLSCREEN\'| translate}}" class="generic-hit-area-button generic-hit-area-button__40 margin-right-4"' +
-                'ng-click="vm.onFullScreenCard(card)" ng-show="vm.showFullScreenButton">' +
+              '<md-button aria-label="{{\'ACTION.TOGGLE_FULLSCREEN\'| translate}}" class="generic-hit-area-button generic-hit-area-button__40 margin-right-4" ng-click="vm.onFullScreenCard(card)" ng-show="vm.showFullScreenButton">' +
                 '<md-icon md-font-icon="icon-fullscreen" ng-if="!vm.showExitFullScreenButton"></md-icon>' +
                 '<md-icon md-font-icon="icon-fullscreen-exit" ng-if="vm.showExitFullScreenButton"></md-icon>' +
               '</md-button>' +
@@ -23,10 +21,9 @@ export default class PublicationArticleCardDirective {
             '</div>' +
           '</div>' +
           '<div class="generic-display-card_content">' +
-            '<div class="article-card_content-header"' +
-              'ng-style="{\'background-image\': \'url(\' + card.content.img + \')\'}">' +
+            '<div class="article-card_content-header">' +
+              '<img ng-src="{{card.content.img}}">' +
               '<div class="article-card_content-header-info">' +
-                '<div class="article-card_content-header-title" ng-bind-html="vm.getMarkedHtml(card.content.title)"></div>' +
                 '<div class="article-card_content-header-intro" ng-bind-html="vm.getMarkedHtml(card.content.intro)"></div>' +
               '</div>' +
             '</div>' +
