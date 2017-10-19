@@ -46,7 +46,7 @@ export default class PublicationTocController {
 
   selectOpenedItemInSection(sectionsArray, itemId) {
     sectionsArray.forEach(sectionElement => {
-      let foundItemIndex = sectionElement.items.findIndex(item => item.id === itemId);
+      const foundItemIndex = sectionElement.items.findIndex(item => item.id === itemId);
       if(foundItemIndex > -1) {
         sectionElement.items[foundItemIndex].selected = true;
         sectionElement.open = true;
