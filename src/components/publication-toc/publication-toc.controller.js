@@ -54,11 +54,13 @@ export default class PublicationTocController {
         this.selectOpenedItemInSection(sectionElement.children, itemId);
       }
     });
-    this.sections.forEach(sct => {
-      if(sct.children.length > 0 && (sct.children.some((el)=>{return el.open === true;}))) {
-        sct.open = true;
-      }
-    });
+    if(this.sections) {
+      this.sections.forEach(sct => {
+        if(sct.children.length > 0 && (sct.children.some((el)=>{return el.open === true;}))) {
+          sct.open = true;
+        }
+      });
+    }
   }
 
   setSectionOpenBasedOnSelectedItem(sectionsArray, itemId) {
