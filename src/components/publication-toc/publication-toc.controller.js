@@ -10,14 +10,17 @@ export default class PublicationTocController {
         this.oldToc = this.$scope.toc;
         this.sections = this.createSections(this.$scope.toc);
       }
-      if(this.$scope.closedItemId) {
+      if(this.$scope.closedItemId && this.$scope.closedItemId.length > 0) {
         this.closeItemById(this.sections, this.$scope.closedItemId);
+      }
+      if(this.$scope.triggeredItemId && this.$scope.triggeredItemId.length > 0) {
+        this.selectOpenedItemInSection(this.sections, this.$scope.triggeredItemId);
       }
     };
   }
 
   displayItemById(itemId, itemUrl) {
-    this.setSectionOpenBasedOnSelectedItem(this.sections, itemId);
+    this.selectOpenedItemInSection(this.sections, itemId);
     this.$scope.onDisplayItemId({itemId: itemId, itemUrl: itemUrl});
   }
 
@@ -39,6 +42,25 @@ export default class PublicationTocController {
       item.selected = true;
     });
     this.$scope.onDisplaySectionItems({items: items});
+  }
+
+  selectOpenedItemInSection(sectionsArray, itemId) {
+    sectionsArray.forEach(sectionElement => {
+      let foundItemIndex = sectionElement.items.findIndex(item => item.id === itemId);
+      if(foundItemIndex > -1) {
+        sectionElement.items[foundItemIndex].selected = true;
+        sectionElement.open = true;
+      } else {
+        this.selectOpenedItemInSection(sectionElement.children, itemId);
+      }
+    });
+    if(this.sections) {
+      this.sections.forEach(sct => {
+        if(sct.children.length > 0 && (sct.children.some((el)=>{return el.open === true;}))) {
+          sct.open = true;
+        }
+      });
+    }
   }
 
   setSectionOpenBasedOnSelectedItem(sectionsArray, itemId) {

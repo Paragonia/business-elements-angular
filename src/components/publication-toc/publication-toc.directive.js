@@ -24,6 +24,7 @@ export default class PublicationTocDirective {
         onDisplaySectionItems: '&',
         onDisplayItemId: '&',
         closedItemId: '=',
+        triggeredItemId: '=',
         toc: '='
       }
     };
