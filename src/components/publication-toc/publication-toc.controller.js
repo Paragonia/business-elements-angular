@@ -16,6 +16,9 @@ export default class PublicationTocController {
       if(this.$scope.triggeredItemId && this.$scope.triggeredItemId.length > 0) {
         this.selectOpenedItemInSection(this.sections, this.$scope.triggeredItemId);
       }
+      if(this.$scope.closeMultipleItems && this.$scope.closeMultipleItems.length > 0) {
+        this.closeItems(this.$scope.closeMultipleItems);
+      }
     };
   }
 
@@ -34,6 +37,12 @@ export default class PublicationTocController {
       if(section.children) {
         this.closeItemById(section.children, itemId);
       }
+    });
+  }
+
+  closeItems(itemIds) {
+    itemIds.forEach(id => {
+      this.closeItemById(this.sections, id);
     });
   }
 

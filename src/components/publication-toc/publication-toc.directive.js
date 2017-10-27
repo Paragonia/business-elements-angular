@@ -23,6 +23,7 @@ export default class PublicationTocDirective {
       scope: {
         onDisplaySectionItems: '&',
         onDisplayItemId: '&',
+        closeMultipleItems: '=',
         closedItemId: '=',
         triggeredItemId: '=',
         toc: '='
